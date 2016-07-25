@@ -57,7 +57,7 @@ exports.play = new Command({
 			}
 
 			// Get the video info.
-			youtubedl.getInfo(suffix, ['-q', '--no-warnings'], function(err, info) {
+			youtubedl.getInfo(suffix, ['-q', '--no-warnings', '--force-ipv4'], function(err, info) {
 				if (err || info.format_id.startsWith('0')) { // Unknown format is invalid.
 					return client.updateMessage(response, msg.author + ', that\'s not a real video, stupid.');
 				}
@@ -177,10 +177,10 @@ function playQueue(client, msg, queue) {
 	var video;
 	if (vid[2] != null) {
 		// Format override.
-		video = youtubedl(vid[0], ['--format=' + vid[2]]);
+		video = youtubedl(vid[0], ['--format=' + vid[2], '--force-ipv4']);
 	} else {
 		// No format override.
-		video = youtubedl(vid[0]);
+		video = youtubedl(vid[0], ['--force-ipv4']);
 	}
 	connection.playRawStream(video, function(err, intent) {
 		if (err) return Command.errorOccurred(client, msg);
