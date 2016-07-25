@@ -1,6 +1,6 @@
 'use strict';
 
-var MAX_QUEUE = 2; // Maximum queue size.
+var MAX_QUEUE = 20; // Maximum queue size.
 
 var youtubedl = require('youtube-dl');
 
@@ -24,7 +24,7 @@ function authorize(client, msg, suffix, next) {
 // Play.
 exports.play = new Command({
 
-	usage: '<video-url>',
+	usage: '<video-url>|<search>',
 
 	description: 'play audio from a video (YouTube, Vimeo, Youku, etc.)',
 
@@ -50,6 +50,11 @@ exports.play = new Command({
 		// Send a confirmation message.
 		client.sendMessage(msg, 'Okay, I\'m looking for that video.', function(err, response) {
 			if (err) return Command.errorOccured(client, msg);
+
+			// If the suffix doesn't start with http, assume it's a search.
+			if (!suffix.startsWith('http')) {
+				suffix = 'gvsearch1:' + suffix;
+			}
 
 			// Get the video info.
 			youtubedl.getInfo(suffix, ['-q', '--no-warnings'], function(err, info) {

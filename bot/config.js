@@ -7,11 +7,18 @@ exports.COMMANDER = 'Kuhne'; // Commander role.
 exports.COMMAND_PREFIX = '!'; // Command prefix.
 
 exports.COMMANDS = { // All enabled commands.
+	// About.
+	'about': require('./commands/about'),
+
+	// Interact.
+	'pet': require('./commands/interact').pet,
+	'slap': require('./commands/interact').slap,
+
+	// Say.
+	'say': require('./commands/say'),
+
 	// Choose.
 	'choose': require('./commands/choose'),
-
-	// Pet.
-	'pet': require('./commands/pet'),
 
 	// Purge.
 	'purge': require('./commands/purge'),
