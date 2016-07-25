@@ -1,0 +1,16 @@
+{
+  "name": "rmc",
+  "version": "1.0.0",
+  "description": "RM-C Discord Bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ruiqimao",
+  "license": "ISC",
+  "dependencies": {
+    "delay-stream": "0.0.3",
+    "discord.js": "^8.0.0",
+    "youtube-dl": "^1.11.1"
+  }
+}
