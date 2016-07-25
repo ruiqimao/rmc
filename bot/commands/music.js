@@ -57,12 +57,17 @@ exports.play = new Command({
 					return client.updateMessage(response, msg.author + ', that\'s not a real video, stupid.');
 				}
 
+				// Get an audio-only format if possible.
+				var formatOverride = null;
+				var audioFormats = info.formats.filter((f) => f.vcodec == 'none');
+				if (audioFormats.length > 0) formatOverride = audioFormats[0].format_id;
+
 				// Send a message confirming the video's been added.
 				var title = info.title.replace(/`/g, '\\`');
 				client.updateMessage(response, 'I\'ve queued up `' + title + '`.');
 
 				// Add the video to queue.
-				addToQueue(client, msg, [suffix, title], queue);
+				addToQueue(client, msg, [suffix, title, formatOverride], queue);
 			});
 		});
 	}
@@ -164,7 +169,14 @@ function playQueue(client, msg, queue) {
 	client.sendMessage(msg, 'I\'m now playing `' + vid[1] + '`.');
 
 	// Start streaming.
-	var video = youtubedl(vid[0]);
+	var video;
+	if (vid[2] != null) {
+		// Format override.
+		video = youtubedl(vid[0], ['--format=' + vid[2]]);
+	} else {
+		// No format override.
+		video = youtubedl(vid[0]);
+	}
 	connection.playRawStream(video, function(err, intent) {
 		if (err) return Command.errorOccurred(client, msg);
 

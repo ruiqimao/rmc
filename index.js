@@ -9,6 +9,12 @@ var constants = require('./constants'),
 var client = new Discord.Client();
 client.loggedIn = false;
 
+// Check the token.
+if (!constants.TOKEN) {
+	console.error('No token specified.');
+	process.exit(1);
+}
+
 // Login.
 client.loginWithToken(constants.TOKEN);
 
