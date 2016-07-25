@@ -24,9 +24,9 @@ function authorize(client, msg, suffix, next) {
 // Play.
 exports.play = new Command({
 
-	usage: '<youtube-url>',
+	usage: '<video-url>',
 
-	description: 'play audio from a YouTube video',
+	description: 'play audio from a video (YouTube, Vimeo, Youku, etc.)',
 
 	authorize: authorize,
 

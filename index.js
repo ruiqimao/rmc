@@ -27,10 +27,16 @@ client.on('ready', function() {
 	rmc.start(client);
 });
 
-// Capture SIGINT.
-process.on('SIGINT', function() {
+// Capture SIGINT and SIGTERM.
+process.on('SIGINT', shutDown);
+process.on('SIGTERM', shutDown);
+
+/*
+ * Gracefully shut down the bot.
+ */
+function shutDown() {
 	console.log('Shutting down...');
 
 	// Log out.
 	if (client.loggedIn) client.logout();
-});
+}
