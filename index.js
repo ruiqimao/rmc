@@ -2,7 +2,7 @@
 
 var Discord = require('discord.js');
 
-var constants = require('./constants'),
+var authorization = require('./authorization.json'),
 	rmc = require('./bot/rmc');
 
 // Create the client.
@@ -10,13 +10,13 @@ var client = new Discord.Client();
 client.loggedIn = false;
 
 // Check the token.
-if (!constants.TOKEN) {
+if (!authorization.DISCORD_TOKEN) {
 	console.error('No token specified.');
 	process.exit(1);
 }
 
 // Login.
-client.loginWithToken(constants.TOKEN);
+client.loginWithToken(authorization.DISCORD_TOKEN);
 
 // Wait for the client to be ready.
 client.on('ready', function() {

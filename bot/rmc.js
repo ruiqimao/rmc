@@ -1,7 +1,6 @@
 'use strict';
 
-var constants = require('../constants'),
-	config = require('./config');
+var config = require('./config');
 
 // Command config.
 const COMMAND_PREFIX = config.COMMAND_PREFIX;
