@@ -36,6 +36,9 @@ exports.start = function(client) {
  */
 function handleMessage(client) {
 	return function(msg) {
+		// Ignore messages from herself.
+		if (msg.author.equals(client.user)) return;
+
 		// Ping.
 		if (msg.content === 'ping') {
 			return client.sendMessage(msg, 'pong');
