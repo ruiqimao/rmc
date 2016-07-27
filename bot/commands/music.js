@@ -2,9 +2,11 @@
 
 var MAX_QUEUE = 20; // Maximum queue size.
 
-var youtubedl = require('youtube-dl');
+var youtubedl = require('youtube-dl'),
+	request = require('request');
 
-var Command = require('./Command');
+var Command = require('./Command'),
+	BufferStream = require('buffer-stream');
 
 var queues = {}, // All queues.
 	playing = {}; // All servers that are playing.
@@ -63,16 +65,17 @@ exports.play = new Command({
 				}
 
 				// Get an audio-only format if possible.
-				var formatOverride = null;
-				var audioFormats = info.formats.filter((f) => f.vcodec == 'none');
-				if (audioFormats.length > 0) formatOverride = audioFormats[0].format_id;
+				if (info.formats) {
+					var audioFormats = info.formats.filter((f) => f.vcodec == 'none');
+					if (audioFormats.length > 0) info.url = audioFormats[0].url;
+				}
 
 				// Send a message confirming the video's been added.
 				var title = info.title.replace(/`/g, '\\`');
 				client.updateMessage(response, 'I\'ve queued up `' + title + '`.');
 
 				// Add the video to queue.
-				addToQueue(client, msg, [suffix, title, formatOverride], queue);
+				addToQueue(client, msg, info, queue);
 			});
 		});
 	}
@@ -171,18 +174,14 @@ function playQueue(client, msg, queue) {
 	playing[msg.server.id] = true;
 
 	// Send a message saying what is being played.
-	client.sendMessage(msg, 'I\'m now playing `' + vid[1] + '`.');
+	client.sendMessage(msg, 'I\'m now playing `' + vid.title + '`.');
+
+	// Pipe the video into a buffer stream (256KB initial, 1MB buffer).
+	var buffer = new BufferStream(262144, 1048576);
+	request.get(vid.url).pipe(buffer);
 
 	// Start streaming.
-	var video;
-	if (vid[2] != null) {
-		// Format override.
-		video = youtubedl(vid[0], ['--format=' + vid[2], '--force-ipv4']);
-	} else {
-		// No format override.
-		video = youtubedl(vid[0], ['--force-ipv4']);
-	}
-	connection.playRawStream(video, function(err, intent) {
+	connection.playRawStream(buffer, function(err, intent) {
 		if (err) return Command.errorOccurred(client, msg);
 
 		// Catch EPIPE in the connection.
@@ -199,9 +198,6 @@ function playQueue(client, msg, queue) {
 			}, 2000); // But first wait 2 seconds.
 		});
 	});
-
-	// Catch all errors.
-	video.on('error', function(err) { });
 }
 
 /*

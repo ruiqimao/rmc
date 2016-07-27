@@ -1,5 +1,7 @@
 'use strict';
 
+require('app-module-path').addPath(__dirname + '/lib'); // Custom module include folder.
+
 var Discord = require('discord.js');
 
 var authorization = require('./authorization.json'),

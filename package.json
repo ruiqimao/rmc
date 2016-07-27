@@ -9,8 +9,10 @@
   "author": "ruiqimao",
   "license": "ISC",
   "dependencies": {
+    "app-module-path": "^1.1.0",
     "delay-stream": "0.0.3",
     "discord.js": "^8.0.0",
+    "request": "^2.74.0",
     "youtube-dl": "^1.11.1"
   }
 }
