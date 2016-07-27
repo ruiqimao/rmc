@@ -6,7 +6,7 @@ module.exports = new Command({
 
 	usage: '',
 
-	description: 'erase all messages in the channel',
+	description: 'erase the last 1000 messages in the channel',
 
 	authorize: function(client, msg, suffix, next) {
 		var allowed =
@@ -19,17 +19,17 @@ module.exports = new Command({
 		// Confirm the command.
 		client.awaitResponse(
 			msg,
-			'Are you sure you want to delete all messages in this channel?',
+			'Are you sure you want to delete the last 1000 messages in this channel?',
 			function(err, msg) {
 				if (err) return Command.errorOccurred(client, msg);
 
 				// Check whether the response was affirmative.
 				if (Command.checkAffirmative(msg.content)) {
 					// Tell the user the messages are being deleted.
-					client.sendMessage(msg, 'Alright, I\'m deleting everything!');
-
-					// Delete all messages!
-					purgeMessages(client, msg.channel);
+					client.sendMessage(msg, 'Alright, I\'m deleting everything!', function() {
+						// Delete all messages!
+						purgeMessages(client, msg.channel);
+					});
 				} else {
 					// Tell the user the response was negative.
 					client.sendMessage(msg, 'Okay, I won\'t touch the messages.');
@@ -39,7 +39,7 @@ module.exports = new Command({
 });
 
 /*
- * Repeatedly delete messages until there are no more left.
+ * Delete the last 1000 messages.
  *
  * @param client The Discord client.
  * @param channel The channel.
@@ -49,13 +49,7 @@ function purgeMessages(client, channel) {
 	client.getChannelLogs(channel, 1000, function(err, messages) {
 		if (err) return;
 
-		// Check if there are any messages left.
-		if (messages.length > 0) {
-			// Delete them all!
-			client.deleteMessages(messages, function(err) {
-				// Keep deleting.
-				purgeMessages(client, channel);
-			});
-		}
+		// Delete them all!
+		client.deleteMessages(messages);
 	});
 }

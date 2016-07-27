@@ -20,6 +20,9 @@ exports.COMMANDS = { // All enabled commands.
 	// Choose.
 	'choose': require('./commands/choose'),
 
+	// Picture.
+	'picture': require('./commands/picture'),
+
 	// Purge.
 	'purge': require('./commands/purge'),
 
