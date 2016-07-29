@@ -8,44 +8,37 @@ import Config from './bot/config';
 
 export function main() {
 
-	// Create the client.
-	const client = new Discord.Client();
-	client.loggedIn = false;
-	client.graceful = false;
-
 	// Check the token.
 	if (!Authorization.DISCORD_TOKEN) {
 		console.error('No token specified.');
 		process.exit(1);
 	}
 
-	// Login.
-	client.loginWithToken(Authorization.DISCORD_TOKEN);
+	// Create and start the bot.
+	const bot = new Bot(Authorization.DISCORD_TOKEN, Config);
+	bot.start();
 
-	// Wait for the client to be ready.
-	client.on('ready', () => {
-		console.log('RM-C is connected and ready to go!');
-		client.loggedIn = true;
+	// Catch all the messages from the bot.
+	bot.on('connected', () => {
+		console.log('RM-C is connected!');
+	});
+	bot.on('ready', () => {
+		console.log('RM-C is ready to go!');
+	});
+	bot.on('disconnected', (graceful) => {
+		console.log('RM-C is disconnected.');
 
-		// Start the bot.
-		(new Bot(client, Config)).start();
+		// If not graceful, exit with an error code.
+		if (!graceful) process.exit(1);
 	});
 
 	// Capture SIGINT and SIGTERM.
-	process.on('SIGINT', shutDown);
-	process.on('SIGTERM', shutDown);
-
-	/*
-	 * Gracefully shut down the bot.
-	 */
-	function shutDown() {
+	const shutdown = () => {
+		// Shutdown the bot.
 		console.log('Shutting down...');
-
-		// Set the graceful shutdown flag.
-		client.graceful = true;
-
-		// Log out.
-		if (client.loggedIn) client.logout();
+		bot.shutdown();
 	}
+	process.on('SIGINT', shutdown);
+	process.on('SIGTERM', shutdown);
 
 }

@@ -1,46 +1,76 @@
+import { Client } from 'discord.js';
+import EventEmitter from 'events';
+
 /*
  * Class for RMC bot.
  */
-export default class Bot {
+export default class Bot extends EventEmitter {
 
 	/*
 	 * Constructor.
 	 *
-	 * @param client The Discord client.
+	 * @param token The authorization token.
 	 * @param config The configuration for the bot.
 	 */
-	constructor(client, config) {
-		// Assign the member variables.
-		this.client = client;
-		this.config = config;
+	constructor(token, config) {
+		super();
 
-		// Initialize all the commands.
+		// Assign the member variables.
+		this.token = token;
+		this.config = config;
+		this.client = new Client();
 		this.commands = {};
-		for (const command in config.COMMANDS) {
-			const Command = config.COMMANDS[command];
-			this.commands[command.toLowerCase()] = new Command(client, config);
-		}
+		this.loggedIn = false;
+		this.gracefulShutdown = false;
 	}
 
 	/*
 	 * Starts normal bot operations.
 	 */
 	start() {
-		console.log('Beginning normal operations...');
+		// Login.
+		this.client.loginWithToken(this.token);
 
-		// Set the status and game.
-		this.client.setStatus('online', this.config.GAME);
+		// Wait for the client to be ready.
+		this.client.on('ready', () => {
 
-		// Read messages.
-		this.client.on('message', (msg) => {
-			this.handleMessage(msg);
+			// Set the logged in flag.
+			this.loggedIn = true;
+			this.emit('connected');
+
+			// Initialize all the commands.
+			for (const command in this.config.COMMANDS) {
+				const Command = this.config.COMMANDS[command];
+				this.commands[command.toLowerCase()] = new Command(this.client, this.config);
+			}
+
+			// Set the status and game.
+			this.client.setStatus('online', this.config.GAME);
+
+			// Read messages.
+			this.client.on('message', (msg) => {
+				this.handleMessage(msg);
+			});
+
+			// Handle a disconnection.
+			this.client.on('disconnected', () => {
+				this.emit('disconnected', this.gracefulShutdown);
+			});
+
+			// Emit a ready event.
+			this.emit('ready');
 		});
+	}
 
-		// Handle a disconnection.
-		this.client.on('disconnected', () => {
-			console.error('Disconnected from Discord.');
-			process.exit(this.client.graceful ? 0 : 1);
-		});
+	/*
+	 * Gracefully shut down the bot.
+	 */
+	shutdown() {
+		// Set the graceful shutdown flag.
+		this.gracefulShutdown = true;
+
+		// Log out.
+		if (this.loggedIn) this.client.logout();
 	}
 
 	/*
