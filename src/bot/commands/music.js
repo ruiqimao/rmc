@@ -5,7 +5,7 @@ import request from 'request';
 
 import BufferStream from 'buffer-stream';
 
-const musicSingleton = Symbol();
+const musicSingleton = Symbol.for(__filename.toLowerCase());
 class Music {
 
 	/*

@@ -49,7 +49,6 @@ export default class BufferStream extends Duplex {
 	 * Read event.
 	 */
 	_read(size) {
-		console.log(size);
 		this.requestedSize = size;
 
 		// If the stream is finished and the buffer is empty, finish.
