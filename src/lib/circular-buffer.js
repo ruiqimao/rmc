@@ -1,6 +1,6 @@
 'use strict';
 
-class CircularBuffer {
+export default class CircularBuffer {
 
 	/*
 	 * Constructor.
@@ -26,10 +26,10 @@ class CircularBuffer {
 		data = data.slice(0, Math.min(this.remaining, data.length));
 
 		// Get the amount of data until the end of the buffer.
-		var tilEnd = this.buffer.length - this.end;
+		const tilEnd = this.buffer.length - this.end;
 
 		// Write as much data as possible.
-		var toWrite = Math.min(tilEnd, data.length);
+		const toWrite = Math.min(tilEnd, data.length);
 		data.copy(this.buffer, this.end, 0, toWrite);
 
 		// Write the rest to the beginning if necessary.
@@ -56,13 +56,13 @@ class CircularBuffer {
 		size = Math.min(this.length, size);
 
 		// Find if the data wraps around.
-		var wraps = this.begin + size >= this.buffer.length;
-		var result;
+		const wraps = this.begin + size >= this.buffer.length;
+		let result;
 		if (wraps) {
 			// Wraps, so allocate a new buffer for the result.
 			result = Buffer.alloc(size);
 			this.buffer.copy(result, 0, this.begin, this.buffer.length);
-			var alreadyCopied = this.buffer.length - this.begin;
+			const alreadyCopied = this.buffer.length - this.begin;
 			this.buffer.copy(result, alreadyCopied, 0, size - alreadyCopied);
 		} else {
 			// Doesn't wrap, so just give a slice of the buffer.
@@ -85,7 +85,7 @@ class CircularBuffer {
 		size = Math.min(this.length, size);
 
 		// Get the result from peek.
-		var result = this.peek(size);
+		const result = this.peek(size);
 
 		// Adjust the begin pointer as needed.
 		this.begin += size;
@@ -101,5 +101,3 @@ class CircularBuffer {
 
 
 };
-
-module.exports = CircularBuffer;

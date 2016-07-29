@@ -1,11 +1,9 @@
-'use strict';
+import { EventEmitter } from 'events';
+import { Duplex } from 'stream';
 
-var EventEmitter = require('events').EventEmitter,
-	Duplex = require('stream').Duplex;
+import CircularBuffer from 'circular-buffer';
 
-var CircularBuffer = require('circular-buffer');
-
-class BufferStream extends Duplex {
+export default class BufferStream extends Duplex {
 
 	/*
 	 * Constructor.
@@ -15,7 +13,7 @@ class BufferStream extends Duplex {
 	 */
 	constructor(initial, max) {
 		// Build the options for the base stream.
-		var options = {
+		const options = {
 			decodeStrings: false,
 			objectMode: false
 		};
@@ -37,12 +35,12 @@ class BufferStream extends Duplex {
 	 */
 	emit(evt) {
 		if (!Duplex.prototype._flush && evt === 'finish') {
-			this._flush(function(err) {
+			this._flush((err) => {
 				if (err) EventEmitter.prototype.emit.call(this, 'error', err);
 				else EventEmitter.prototype.emit.call(this, 'finish');
-			}.bind(this));
+			});
 		} else {
-			var args = Array.prototype.slice.call(arguments);
+			const args = Array.prototype.slice.call(arguments);
 			EventEmitter.prototype.emit.apply(this, args);
 		}
 	}
@@ -69,7 +67,7 @@ class BufferStream extends Duplex {
 	 */
 	tryPush() {
 		// Get the total length of what would be pushed.
-		var amountToPush = Math.min(this.buffer.length, this.requestedSize);
+		const amountToPush = Math.min(this.buffer.length, this.requestedSize);
 
 		// Check if it's possible to push right now.
 		if (this.canPush &&
@@ -84,11 +82,11 @@ class BufferStream extends Duplex {
 
 		// Append part of the waiting chunk if possible.
 		if (this.waiting) {
-			var chunk = this.waiting.chunk;
-			var callback = this.waiting.callback;
+			const chunk = this.waiting.chunk;
+			const callback = this.waiting.callback;
 
 			// Append the data to the buffer.
-			var toPush = Math.min(this.buffer.remaining, chunk.length);
+			const toPush = Math.min(this.buffer.remaining, chunk.length);
 			this.buffer.push(chunk.slice(0, toPush));
 
 			// Adjust the waiting chunk.
@@ -145,5 +143,3 @@ class BufferStream extends Duplex {
 	}
 
 };
-
-module.exports = BufferStream;

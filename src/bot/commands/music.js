@@ -80,7 +80,7 @@ class Music {
 		}
 
 		// Get the first video from the queue.
-		var vid = queue.shift();
+		const vid = queue.shift();
 
 		// Set the server to playing.
 		this.playing[channel.server.id] = true;
@@ -89,7 +89,7 @@ class Music {
 		command.client.sendMessage(channel, 'I\'m now playing `' + vid.title + '`.');
 
 		// Pipe the video into a buffer stream.
-		var buffer = new BufferStream(Music.INITIAL_BUFFER, Music.MAX_BUFFER);
+		const buffer = new BufferStream(Music.INITIAL_BUFFER, Music.MAX_BUFFER);
 		request.get(vid.url).pipe(buffer);
 
 		// Start streaming.
@@ -213,7 +213,7 @@ export class Skip extends Command {
 
 			// Remove the appropriate number of entries from the queue.
 			if (msg.server.id in Music.instance.queues) {
-				var queue = Music.instance.queues[msg.server.id];
+				const queue = Music.instance.queues[msg.server.id];
 				while (queue.length > 0 && number -- > 1) {
 					queue.shift();
 				}
