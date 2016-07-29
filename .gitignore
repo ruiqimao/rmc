@@ -2,7 +2,8 @@
 *.swp
 
 # Don't leak the API keys.
-authorization.json
+authorization.js
 
-# No node modules.
+# No node modules or logs.
 node_modules/
+npm-debug.log
