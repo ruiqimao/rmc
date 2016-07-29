@@ -1,6 +1,15 @@
-import Command, { Util } from './command';
+import { Plugin, Command, Util } from 'plugin';
 
-export class Join extends Command {
+export default class extends Plugin {
+
+	init() {
+		this.addCommand('join', Join);
+		this.addCommand('leave', Leave);
+	}
+
+}
+
+class Join extends Command {
 
 	get usage() { return ''; }
 	get description() { return 'join a voice channel'; }
@@ -27,7 +36,7 @@ export class Join extends Command {
 
 }
 
-export class Leave extends Command {
+class Leave extends Command {
 
 	get usage() { return ''; }
 	get description() { return 'leave a voice channel'; }

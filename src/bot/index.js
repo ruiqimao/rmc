@@ -19,6 +19,7 @@ export default class Bot extends EventEmitter {
 		this.token = token;
 		this.config = config;
 		this.client = new Client();
+		this.plugins = [];
 		this.commands = {};
 		this.loggedIn = false;
 		this.gracefulShutdown = false;
@@ -38,11 +39,8 @@ export default class Bot extends EventEmitter {
 			this.loggedIn = true;
 			this.emit('connected');
 
-			// Initialize all the commands.
-			for (const command in this.config.COMMANDS) {
-				const Command = this.config.COMMANDS[command];
-				this.commands[command.toLowerCase()] = new Command(this.client, this.config);
-			}
+			// Initialize all the plugins.
+			this.loadPlugins();
 
 			// Set the status and game.
 			this.client.setStatus('online', this.config.GAME);
@@ -60,6 +58,38 @@ export default class Bot extends EventEmitter {
 			// Emit a ready event.
 			this.emit('ready');
 		});
+	}
+
+	/*
+	 * Load all the plugins in the config.
+	 */
+	loadPlugins() {
+		// Clear the plugin list.
+		this.plugins = [];
+
+		// Load the plugins.
+		for (const plugin in this.config.PLUGINS) {
+			const Plugin = this.config.PLUGINS[plugin];
+			this.plugins.push(new Plugin(this));
+		}
+
+		// Build a cache of commands.
+		this.loadCommandCache();
+	}
+
+	/*
+	 * Build a cache of all commands.
+	 */
+	loadCommandCache() {
+		// Clear the command cache.
+		this.commands = {};
+
+		// Load all the commands and store them in the cache.
+		for (const plugin of this.plugins) {
+			for (const command of plugin.commands) {
+				this.commands[command.name] = command.command;
+			}
+		}
 	}
 
 	/*

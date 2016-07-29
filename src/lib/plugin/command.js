@@ -1,18 +1,18 @@
 /*
- * Class for Command.
+ * Command.
  */
 export default class Command {
 
 	/*
 	 * Constructor.
 	 *
-	 * @param client The Discord client.
-	 * @param config The configuration.
+	 * @param plugin The plugin associated with the command.
 	 */
-	constructor(client, config) {
+	constructor(plugin) {
 		// Assign the member variables.
-		this.client = client;
-		this.config = config;
+		this.plugin = plugin;
+		this.client = plugin.client;
+		this.config = plugin.config;
 
 		// Make sure the proper virtual methods exist.
 		if (this.usage === undefined)       throw new TypeError('Must have a usage.');
@@ -75,67 +75,6 @@ export default class Command {
 	 */
 	errorOccurred(channel) {
 		this.client.sendMessage(channel, 'My creator is an idiot. Something went wrong!');
-	}
-
-}
-
-/*
- * Other utilities.
- */
-export class Util {
-
-	/*
-	 * Check whether a message is affirmative.
-	 *
-	 * @param msg The string contents of the message.
-	 *
-	 * @return Whether the message is affirmative.
-	 */
-	static checkAffirmative(msg) {
-		const affirmativeWords = [
-			'yes', 'yeah', 'sure', 'of course', 'mhmm', 'okay', 'ok', 'y', 'yep', 'yea',
-			'oh yes', 'hell yeah', 'hell yea', 'no shit'
-		];
-
-		// Set the message to lowercase and trim it.
-		msg = msg.toLowerCase().trim();
-
-		// Get whether the message is affirmative.
-		return affirmativeWords.indexOf(msg) != -1;
-	}
-
-	/*
-	 * Check if a user has a given permission.
-	 *
-	 * @param channel A channel.
-	 * @param user A user.
-	 * @param permission The permission to check.
-	 *
-	 * @return Whether the user has permission.
-	 */
-	static checkPermission(channel, user, permission) {
-		// If the channel is private, all permissions are granted.
-		if (channel.isPrivate) return true;
-
-		// Get whether the user has permission.
-		return channel.permissionsOf(user).hasPermission(permission);
-	}
-
-	/*
-	 * Check if a user has a given role.
-	 *
-	 * @param server A server.
-	 * @param user A user.
-	 * @param role The role to check.
-	 *
-	 * @return Whether the user has the role.
-	 */
-	static checkRole(server, user, role) {
-		// If the channel is private, all permissions are granted.
-		if (!server) return true;
-
-		// Get whether the user has the role.
-		return server.rolesOfUser(user).reduce((p, c, i) => p || c.name == role, false);
 	}
 
 }

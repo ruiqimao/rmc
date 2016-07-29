@@ -1,39 +1,30 @@
-import Command from './command';
+import { Plugin, Command } from 'plugin';
 
 import youtubedl from 'youtube-dl';
 import request from 'request';
 
 import BufferStream from 'buffer-stream';
 
-const musicSingleton = Symbol.for(__filename.toLowerCase());
-class Music {
+export default class extends Plugin {
 
-	/*
-	 * Get the instance of the singleton.
-	 */
-	static get instance() {
-		if (!this[musicSingleton]) {
-			this[musicSingleton] = new Music();
-		}
-		return this[musicSingleton];
-	}
+	init() {
+		this.addCommand('play', Play);
+		this.addCommand('skip', Skip);
 
-	/*
-	 * Constructor.
-	 */
-	constructor() {
+		// Set the constants.
+		this.MAX_QUEUE = 20; // Maximum queue size.
+		this.INITIAL_BUFFER = 262144; // Initial buffer pass condition (256KB).
+		this.MAX_BUFFER = 1048576; // Maximum buffer size (1MB).
+
+		// Set the member variables.
 		this.queues = {}; // All queues.
 		this.playing = {}; // All servers that are playing.
 	}
 
-	static get MAX_QUEUE() { return 20; } // Maximum queue size.
-	static get INITIAL_BUFFER() { return 262144; } // Initial buffer pass condition (256KB).
-	static get MAX_BUFFER() { return 1048576; } // Maximum buffer size (1MB).
-
 	/*
 	 * Common authorization requirements.
 	 */
-	static authorize(command, msg, next) {
+	authorize(command, msg, next) {
 		const connection = command.getVoiceConnection(msg.server);
 		const allowed =
 			connection != null && // Must be connected to a voice channel.
@@ -89,7 +80,7 @@ class Music {
 		command.client.sendMessage(channel, 'I\'m now playing `' + vid.title + '`.');
 
 		// Pipe the video into a buffer stream.
-		const buffer = new BufferStream(Music.INITIAL_BUFFER, Music.MAX_BUFFER);
+		const buffer = new BufferStream(this.INITIAL_BUFFER, this.MAX_BUFFER);
 		request.get(vid.url).pipe(buffer);
 
 		// Start streaming.
@@ -125,24 +116,24 @@ class Music {
 
 }
 
-export class Play extends Command {
+class Play extends Command {
 
 	get usage() { return '<video-url>|<search>'; }
 	get description() { return 'play audio from a video (YouTube, Vimeo, Youku, etc.)'; }
 
 	authorize(msg, suffix, next) {
-		Music.authorize(this, msg, next);
+		this.plugin.authorize(this, msg, next);
 	}
 
 	process(msg, suffix) {
 		// Get the queue.
-		if (!(msg.server.id in Music.instance.queues)) {
-			Music.instance.queues[msg.server.id] = [];
+		if (!(msg.server.id in this.plugin.queues)) {
+			this.plugin.queues[msg.server.id] = [];
 		}
-		const queue = Music.instance.queues[msg.server.id];
+		const queue = this.plugin.queues[msg.server.id];
 
 		// Check the queue size.
-		if (queue.length >= Music.MAX_QUEUE) {
+		if (queue.length >= this.plugin.MAX_QUEUE) {
 			return this.client.reply(msg, 'Overload! I can\'t queue that many songs. Feed me more RAM.');
 		}
 
@@ -177,20 +168,20 @@ export class Play extends Command {
 				this.client.updateMessage(response, 'I\'ve queued up `' + title + '`.');
 
 				// Add the video to queue.
-				Music.instance.addToQueue(this, msg.channel, info, queue);
+				this.plugin.addToQueue(this, msg.channel, info, queue);
 			});
 		});
 	}
 
 }
 
-export class Skip extends Command {
+class Skip extends Command {
 
 	get usage() { return '[number|all]'; }
 	get description() { return 'skip 1 or more songs'; }
 
 	authorize(msg, suffix, next) {
-		Music.authorize(this, msg, next);
+		this.plugin.authorize(this, msg, next);
 	}
 
 	process(msg, suffix) {
@@ -200,7 +191,7 @@ export class Skip extends Command {
 		// Check the number.
 		if (suffix == 'all') {
 			// Skip everthing.
-			Music.instance.clearQueue(msg.server);
+			this.plugin.clearQueue(msg.server);
 		} else if (suffix == '') {
 			// Just skip one, so do nothing here.
 		} else {
@@ -212,8 +203,8 @@ export class Skip extends Command {
 			}
 
 			// Remove the appropriate number of entries from the queue.
-			if (msg.server.id in Music.instance.queues) {
-				const queue = Music.instance.queues[msg.server.id];
+			if (msg.server.id in this.plugin.queues) {
+				const queue = this.plugin.queues[msg.server.id];
 				while (queue.length > 0 && number -- > 1) {
 					queue.shift();
 				}

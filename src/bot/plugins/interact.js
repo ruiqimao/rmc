@@ -1,6 +1,15 @@
-import Command from './command';
+import { Plugin, Command } from 'plugin';
 
-export class Pet extends Command {
+export default class extends Plugin {
+
+	init() {
+		this.addCommand('pet', Pet);
+		this.addCommand('slap', Slap);
+	}
+
+}
+
+class Pet extends Command {
 
 	get usage() { return ''; }
 	get description() { return 'pet me for being a good robot!'; }
@@ -33,7 +42,7 @@ export class Pet extends Command {
 
 }
 
-export class Slap extends Command {
+class Slap extends Command {
 
 	get usage() { return ''; }
 	get description() { return 'slap me for being a bad robot :('; }

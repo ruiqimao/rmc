@@ -1,6 +1,37 @@
-import Command from './command';
+import { Plugin, Command } from 'plugin';
 
-export default class Uptime extends Command {
+export default class extends Plugin {
+
+	init() {
+		this.addCommand('about', About);
+		this.addCommand('uptime', Uptime);
+	}
+
+}
+
+class About extends Command {
+
+	get usage() { return ''; }
+	get description() { return 'about me!'; }
+
+	init() {
+		// About text.
+		this.ABOUT =
+			`I'm "Ruinous Might Cannon Type", or otherwise known as "RM-C". I was made by Ernesta Kuhne (read: Ruiqi Mao) and if you piss me off, I'll seriously hurt you. <3`;
+	}
+
+	authorize(msg, suffix, next) {
+		// Everyone is allowed ask about RM-C.
+		next(true);
+	}
+
+	process(msg, suffix) {
+		this.client.sendMessage(msg, this.ABOUT);
+	}
+
+}
+
+class Uptime extends Command {
 
 	get usage() { return ''; }
 	get description() { return 'find out how long I\'ve been running'; }

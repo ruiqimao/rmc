@@ -1,6 +1,14 @@
-import Command from './command';
+import { Plugin, Command } from 'plugin';
 
-export default class Picture extends Command {
+export default class extends Plugin {
+
+	init() {
+		this.addCommand('picture', Picture);
+	}
+
+}
+
+class Picture extends Command {
 
 	get usage() { return ''; }
 	get description() { return 'find a picture of me'; }

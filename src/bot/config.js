@@ -1,13 +1,12 @@
-// Import all commands.
-import About from './commands/about';
-import { Pet, Slap } from './commands/interact';
-import Say from './commands/say';
-import Choose from './commands/choose';
-import Picture from './commands/picture';
-import Purge from './commands/purge';
-import Uptime from './commands/uptime';
-import { Join, Leave } from './commands/voice';
-import { Play, Skip } from './commands/music';
+// Import all plugins.
+import About from './plugins/about';
+import Interact from './plugins/interact';
+import Say from './plugins/say';
+import Choose from './plugins/choose';
+import Picture from './plugins/picture';
+import Purge from './plugins/purge';
+import Voice from './plugins/voice';
+import Music from './plugins/music';
 
 // Export the config.
 export default {
@@ -17,35 +16,14 @@ export default {
 
 	COMMAND_PREFIX: '!', // Command prefix.
 
-	COMMANDS: { // All enabled commands.
-		// About.
+	PLUGINS: { // All enabled plugins.
 		About,
-
-		// Interact.
-		Pet,
-		Slap,
-
-		// Say.
+		Interact,
 		Say,
-
-		// Choose.
 		Choose,
-
-		// Picture.
 		Picture,
-
-		// Purge.
 		Purge,
-
-		// Uptime.
-		Uptime,
-
-		// Voice.
-		Join,
-		Leave,
-
-		// Music.
-		Play,
-		Skip
+		Voice,
+		Music
 	}
 }
