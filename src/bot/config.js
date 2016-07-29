@@ -1,9 +1,3 @@
-export const game = 'Beating Up AR-D'; // Game to play.
-
-export const commander = 'Kuhne'; // Commander role.
-
-export const commandPrefix = '!'; // Command prefix.
-
 // Import all commands.
 import About from './commands/about';
 import { Pet, Slap } from './commands/interact';
@@ -15,34 +9,43 @@ import Uptime from './commands/uptime';
 import { Join, Leave } from './commands/voice';
 import { Play, Skip } from './commands/music';
 
-export const commands = { // All enabled commands.
-	// About.
-	About,
+// Export the config.
+export default {
+	GAME: 'Beating Up AR-D', // GAme to play.
 
-	// Interact.
-	Pet,
-	Slap,
+	COMMANDER: 'Kuhne', // Commander role.
 
-	// Say.
-	Say,
+	COMMAND_PREFIX: '!', // Command prefix.
 
-	// Choose.
-	Choose,
+	COMMANDS: { // All enabled commands.
+		// About.
+		About,
 
-	// Picture.
-	Picture,
+		// Interact.
+		Pet,
+		Slap,
 
-	// Purge.
-	Purge,
+		// Say.
+		Say,
 
-	// Uptime.
-	Uptime,
+		// Choose.
+		Choose,
 
-	// Voice.
-	Join,
-	Leave,
+		// Picture.
+		Picture,
 
-	// Music.
-	Play,
-	Skip
-};
+		// Purge.
+		Purge,
+
+		// Uptime.
+		Uptime,
+
+		// Voice.
+		Join,
+		Leave,
+
+		// Music.
+		Play,
+		Skip
+	}
+}

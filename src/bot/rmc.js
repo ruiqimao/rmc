@@ -16,8 +16,8 @@ export default class RMC {
 
 		// Initialize all the commands.
 		this.commands = {};
-		for (const command in config.commands) {
-			const Command = config.commands[command];
+		for (const command in config.COMMANDS) {
+			const Command = config.COMMANDS[command];
 			this.commands[command.toLowerCase()] = new Command(client, config);
 		}
 	}
@@ -29,7 +29,7 @@ export default class RMC {
 		console.log('Beginning normal operations...');
 
 		// Set the status and game.
-		this.client.setStatus('online', this.config.game);
+		this.client.setStatus('online', this.config.GAME);
 
 		// Read messages.
 		this.client.on('message', (msg) => {
@@ -59,12 +59,12 @@ export default class RMC {
 
 		// Trim the message and check if the message is a command.
 		const message = msg.content.trim();
-		if (message.startsWith(this.config.commandPrefix)) {
+		if (message.startsWith(this.config.COMMAND_PREFIX)) {
 			// Get the command.
-			const command = message.substring(this.config.commandPrefix.length).split(' ')[0];
+			const command = message.substring(this.config.COMMAND_PREFIX.length).split(' ')[0];
 
 			// Get the suffix.
-			const suffix = message.substring(command.length + this.config.commandPrefix.length).trim();
+			const suffix = message.substring(command.length + this.config.COMMAND_PREFIX.length).trim();
 
 			// Handle the command.
 			this.handleCommand(msg, command, suffix);
@@ -112,7 +112,7 @@ export default class RMC {
 				let cmd = this.commands[command];
 
 				// Construct the entry.
-				let entry = '`' + this.config.commandPrefix + command;
+				let entry = '`' + this.config.COMMAND_PREFIX + command;
 				if (cmd.usage) entry += ' ' + cmd.usage;
 				entry += '`: ' + cmd.description;
 

@@ -1,7 +1,7 @@
 import Discord from 'discord.js';
 import RMC from './bot/rmc';
 import Authorization from './bot/authorization';
-import * as Config from './bot/config';
+import Config from './bot/config';
 
 // Create the client.
 const client = new Discord.Client();

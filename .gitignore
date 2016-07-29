@@ -4,6 +4,9 @@
 # Don't leak the API keys.
 authorization.js
 
+# No need to give away my deploy script.
+deploy
+
 # No node modules or logs.
 node_modules/
 npm-debug.log

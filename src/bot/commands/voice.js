@@ -8,7 +8,7 @@ export class Join extends Command {
 	authorize(msg, suffix, next) {
 		const allowed =
 			  !msg.channel.isPrivate && // Cannot be PM.
-			  Util.checkRole(msg.server, msg.author, this.config.commander); // Must be a commander.
+			  Util.checkRole(msg.server, msg.author, this.config.COMMANDER); // Must be a commander.
 		next(allowed);
 	}
 
@@ -35,7 +35,7 @@ export class Leave extends Command {
 	authorize(msg, suffix, next) {
 		const allowed =
 			  !msg.channel.isPrivate && // Cannot be PM.
-			  Util.checkRole(msg.server, msg.author, this.config.commander); // Must be a commander.
+			  Util.checkRole(msg.server, msg.author, this.config.COMMANDER); // Must be a commander.
 		next(allowed);
 	}
 
