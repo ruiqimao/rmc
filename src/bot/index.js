@@ -1,7 +1,7 @@
 /*
  * Class for RMC bot.
  */
-export default class RMC {
+export default class Bot {
 
 	/*
 	 * Constructor.

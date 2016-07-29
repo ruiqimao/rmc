@@ -1,6 +1,6 @@
 function useES6() {
 	// All of ES6 works, so just run straight from source.
-	require('./src');
+	require('./src').main();
 }
 
 function useES5() {
@@ -11,7 +11,7 @@ function useES5() {
 		require('app-module-path').addPath(__dirname + '/lib/lib');
 
 		// Start running.
-		require('./lib');
+		require('./lib').main();
 	} else {
 		// Not production, so run the non-transpiled code.
 		// Add the lib folder as a path for imports.
