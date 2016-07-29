@@ -5,7 +5,7 @@
 Put an `authorization.js` file in `src/bot`, structured like so:
 ```javascript
 export default {
-	"DISCORD_TOKEN": "<Discord Bot Token>"
+	DISCORD_TOKEN: '<Discord Bot Token>'
 }
 ```
 
