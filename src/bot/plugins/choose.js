@@ -13,12 +13,12 @@ class Choose extends Command {
 	get usage() { return '<choice1>;[choice2];...'; }
 	get description() { return 'randomly choose something'; }
 
-	authorize(msg, suffix, next) {
+	*authorize(msg, suffix, next) {
 		// Everyone is allowed to use choose.
-		next(true);
+		return true;
 	}
 
-	process(msg, suffix) {
+	*process(msg, suffix) {
 		// Get all the choices and weed out the blank ones.
 		const choices = suffix.split(';').map((c) => c.trim()).filter((c) => c.length > 0);
 

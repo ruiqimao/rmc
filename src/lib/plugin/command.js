@@ -1,3 +1,5 @@
+import co from 'co';
+
 /*
  * Command.
  */
@@ -21,7 +23,7 @@ export default class Command {
 		if (this.process === undefined)     throw new TypeError('Must implement process().');
 
 		// Call init() if it exists.
-		if (this.init) this.init();
+		if (this.init) co(this.init.bind(this));
 	}
 
 	/*
@@ -32,14 +34,18 @@ export default class Command {
 	 */
 	run(msg, suffix) {
 		// Check permissions.
-		this.authorize(msg, suffix, (allowed) => {
+		co(this.authorize.bind(this), msg, suffix).then((allowed) => {
 			if (allowed) {
 				// Run.
-				this.process(msg, suffix);
+				co(this.process.bind(this), msg, suffix).catch(() => {
+					this.errorOccurred(msg);
+				});
 			} else {
 				// Don't run.
 				this.permissionDenied(msg);
 			}
+		}).catch(() => {
+			this.errorOccurred(msg);
 		});
 	}
 

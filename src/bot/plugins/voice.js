@@ -14,14 +14,14 @@ class Join extends Command {
 	get usage() { return ''; }
 	get description() { return 'join a voice channel'; }
 
-	authorize(msg, suffix, next) {
+	*authorize(msg, suffix) {
 		const allowed =
 			  !msg.channel.isPrivate && // Cannot be PM.
 			  Util.checkRole(msg.server, msg.author, this.config.COMMANDER); // Must be a commander.
-		next(allowed);
+		return allowed;
 	}
 
-	process(msg, suffix) {
+	*process(msg, suffix) {
 		// Get the voice channel to join.
 		const channel = msg.author.voiceChannel;
 
@@ -41,14 +41,14 @@ class Leave extends Command {
 	get usage() { return ''; }
 	get description() { return 'leave a voice channel'; }
 
-	authorize(msg, suffix, next) {
+	*authorize(msg, suffix) {
 		const allowed =
 			  !msg.channel.isPrivate && // Cannot be PM.
 			  Util.checkRole(msg.server, msg.author, this.config.COMMANDER); // Must be a commander.
-		next(allowed);
+		return allowed;
 	}
 
-	process(msg, suffix) {
+	*process(msg, suffix) {
 		const connection = this.getVoiceConnection(msg.server);
 
 		// If not connected to a voice channel on the server, don't do anything.

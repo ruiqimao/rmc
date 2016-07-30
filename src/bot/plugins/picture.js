@@ -13,7 +13,7 @@ class Picture extends Command {
 	get usage() { return ''; }
 	get description() { return 'find a picture of me'; }
 
-	init() {
+	*init() {
 		// Picture URLs.
 		this.pictures = [
 			'http://vignette3.wikia.nocookie.net/gakusen-toshi-asterisk/images/7/77/RM-C_Anime.png/revision/latest?cb=20151129023211',
@@ -37,20 +37,17 @@ class Picture extends Command {
 		];
 	}
 
-	authorize(msg, suffix, next) {
+	*authorize(msg, suffix) {
 		// Everyone is allowed to look for pictures.
-		next(true);
+		return true;
 	}
 
-	process(msg, suffix) {
+	*process(msg, suffix) {
 		// Respond with a random picture and message.
 		const index = Math.floor(Math.random() * this.pictures.length);
 		const index2 = Math.floor(Math.random() * this.responses.length);
-		this.client.sendFile(msg, this.pictures[index], 'image.jpg', (err) => {
-			if (err) return this.errorOccurred(msg);
-
-			this.client.sendMessage(msg, this.responses[index2]);
-		});
+		yield this.client.sendFile(msg, this.pictures[index], 'image.jpg');
+		this.client.sendMessage(msg, this.responses[index2]);
 	}
 
 }

@@ -1,5 +1,6 @@
 import { Client } from 'discord.js';
 import EventEmitter from 'events';
+import Mongorito from 'mongorito';
 
 /*
  * Class for RMC bot.
@@ -10,15 +11,18 @@ export default class Bot extends EventEmitter {
 	 * Constructor.
 	 *
 	 * @param token The authorization token.
+	 * @param dbUri The database URI.
 	 * @param config The configuration for the bot.
 	 */
-	constructor(token, config) {
+	constructor(token, dbUri, config) {
 		super();
 
 		// Assign the member variables.
 		this.token = token;
+		this.dbUri = dbUri;
 		this.config = config;
 		this.client = new Client();
+		this.db = null;
 		this.plugins = [];
 		this.commands = {};
 		this.loggedIn = false;
@@ -29,34 +33,43 @@ export default class Bot extends EventEmitter {
 	 * Starts normal bot operations.
 	 */
 	start() {
-		// Login.
-		this.client.loginWithToken(this.token);
+		// Connect to the database.
+		Mongorito.connect(this.dbUri).then((db) => {
+			this.db = db;
+			console.log('Connected to database!');
 
-		// Wait for the client to be ready.
-		this.client.on('ready', () => {
+			// Login.
+			this.client.loginWithToken(this.token);
 
-			// Set the logged in flag.
-			this.loggedIn = true;
-			this.emit('connected');
+			// Wait for the client to be ready.
+			this.client.on('ready', () => {
 
-			// Initialize all the plugins.
-			this.loadPlugins();
+				// Set the logged in flag.
+				this.loggedIn = true;
+				this.emit('connected');
 
-			// Set the status and game.
-			this.client.setStatus('online', this.config.GAME);
+				// Initialize all the plugins.
+				this.loadPlugins();
 
-			// Read messages.
-			this.client.on('message', (msg) => {
-				this.handleMessage(msg);
+				// Set the status and game.
+				this.client.setStatus('online', this.config.GAME);
+
+				// Read messages.
+				this.client.on('message', (msg) => {
+					this.handleMessage(msg);
+				});
+
+				// Handle a disconnection.
+				this.client.on('disconnected', () => {
+					this.emit('disconnected', this.gracefulShutdown);
+				});
+
+				// Emit a ready event.
+				this.emit('ready');
 			});
 
-			// Handle a disconnection.
-			this.client.on('disconnected', () => {
-				this.emit('disconnected', this.gracefulShutdown);
-			});
-
-			// Emit a ready event.
-			this.emit('ready');
+		}).catch((err) => {
+			console.error('Couldn\'t connect to the database.');
 		});
 	}
 
@@ -101,6 +114,9 @@ export default class Bot extends EventEmitter {
 
 		// Log out.
 		if (this.loggedIn) this.client.logout();
+
+		// Close the database connection.
+		if (this.db) this.db.close();
 	}
 
 	/*

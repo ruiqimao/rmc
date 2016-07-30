@@ -20,6 +20,9 @@ function useES5() {
 		// Transpile from ES6 to ES5.
 		require('babel-register');
 
+		// Include polyfill for generators.
+		require('babel-polyfill');
+
 		// Start running.
 		useES6();
 	}

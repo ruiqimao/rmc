@@ -24,13 +24,13 @@ export default class extends Plugin {
 	/*
 	 * Common authorization requirements.
 	 */
-	authorize(command, msg, next) {
+	authorize(command, msg) {
 		const connection = command.getVoiceConnection(msg.server);
 		const allowed =
 			connection != null && // Must be connected to a voice channel.
 			msg.author.voiceChannel != null && // User must be connected to a voice channel.
 			connection.voiceChannel.equals(msg.author.voiceChannel); // Must be connected to the same voice channel.
-		next(allowed);
+		return allowed;
 	}
 
 	/*
@@ -84,14 +84,12 @@ export default class extends Plugin {
 		request.get(vid.url).pipe(buffer);
 
 		// Start streaming.
-		connection.playRawStream(buffer, (err, intent) => {
-			if (err) return command.errorOccurred(msg);
-
+		connection.playRawStream(buffer).then((intent) => {
 			// Catch EPIPE in the connection.
 			connection.streamProc.stdin.on('error', () => { });
 
 			// Catch all errors.
-			intent.on('error', () => { });
+			intent.on('error', (err) => { });
 
 			// Catch the end event.
 			intent.on('end', () => {
@@ -100,6 +98,8 @@ export default class extends Plugin {
 					this.playQueue(command, channel, queue);
 				}, 2000); // But first wait 2 seconds.
 			});
+		}).catch(() => {
+			command.errorOccurred();
 		});
 	}
 
@@ -121,11 +121,11 @@ class Play extends Command {
 	get usage() { return '<video-url>|<search>'; }
 	get description() { return 'play audio from a video (YouTube, Vimeo, Youku, etc.)'; }
 
-	authorize(msg, suffix, next) {
-		this.plugin.authorize(this, msg, next);
+	*authorize(msg, suffix) {
+		return this.plugin.authorize(this, msg);
 	}
 
-	process(msg, suffix) {
+	*process(msg, suffix) {
 		// Get the queue.
 		if (!(msg.server.id in this.plugin.queues)) {
 			this.plugin.queues[msg.server.id] = [];
@@ -143,33 +143,31 @@ class Play extends Command {
 		}
 
 		// Send a confirmation message.
-		this.client.sendMessage(msg, 'Okay, I\'m looking for that video.', (err, response) => {
-			if (err) return this.errorOccured(msg);
+		const response = yield this.client.sendMessage(msg, 'Okay, I\'m looking for that video.');
 
-			// If the suffix doesn't start with http, assume it's a search.
-			if (!suffix.startsWith('http')) {
-				suffix = 'gvsearch1:' + suffix;
+		// If the suffix doesn't start with http, assume it's a search.
+		if (!suffix.startsWith('http')) {
+			suffix = 'gvsearch1:' + suffix;
+		}
+
+		// Get the video info.
+		youtubedl.getInfo(suffix, ['-q', '--no-warnings', '--force-ipv4'], (err, info) => {
+			if (err || info.format_id.startsWith('0')) { // Unknown format is invalid.
+				return this.client.updateMessage(response, msg.author + ', that\'s not a real video, stupid.');
 			}
 
-			// Get the video info.
-			youtubedl.getInfo(suffix, ['-q', '--no-warnings', '--force-ipv4'], (err, info) => {
-				if (err || info.format_id.startsWith('0')) { // Unknown format is invalid.
-					return this.client.updateMessage(response, msg.author + ', that\'s not a real video, stupid.');
-				}
+			// Get an audio-only format if possible.
+			if (info.formats) {
+				const audioFormats = info.formats.filter((f) => f.vcodec == 'none');
+				if (audioFormats.length > 0) info.url = audioFormats[0].url;
+			}
 
-				// Get an audio-only format if possible.
-				if (info.formats) {
-					const audioFormats = info.formats.filter((f) => f.vcodec == 'none');
-					if (audioFormats.length > 0) info.url = audioFormats[0].url;
-				}
+			// Send a message confirming the video's been added.
+			const title = info.title.replace(/`/g, '\\`');
+			this.client.updateMessage(response, 'I\'ve queued up `' + title + '`.');
 
-				// Send a message confirming the video's been added.
-				const title = info.title.replace(/`/g, '\\`');
-				this.client.updateMessage(response, 'I\'ve queued up `' + title + '`.');
-
-				// Add the video to queue.
-				this.plugin.addToQueue(this, msg.channel, info, queue);
-			});
+			// Add the video to queue.
+			this.plugin.addToQueue(this, msg.channel, info, queue);
 		});
 	}
 
@@ -180,11 +178,11 @@ class Skip extends Command {
 	get usage() { return '[number|all]'; }
 	get description() { return 'skip 1 or more songs'; }
 
-	authorize(msg, suffix, next) {
-		this.plugin.authorize(this, msg, next);
+	*authorize(msg, suffix) {
+		return this.plugin.authorize(this, msg);
 	}
 
-	process(msg, suffix) {
+	*process(msg, suffix) {
 		// Get the voice connection.
 		const connection = this.getVoiceConnection(msg.server);
 

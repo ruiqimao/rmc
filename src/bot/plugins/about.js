@@ -15,18 +15,18 @@ class About extends Command {
 	get usage() { return ''; }
 	get description() { return 'about me!'; }
 
-	init() {
+	*init() {
 		// About text.
 		this.ABOUT =
 			`I'm "Ruinous Might Cannon Type", or otherwise known as "RM-C". I was made by Ernesta Kuhne (read: Ruiqi Mao) and if you piss me off, I'll seriously hurt you. <3`;
 	}
 
-	authorize(msg, suffix, next) {
+	*authorize(msg, suffix) {
 		// Everyone is allowed ask about RM-C.
-		next(true);
+		return true;
 	}
 
-	process(msg, suffix) {
+	*process(msg, suffix) {
 		this.client.sendMessage(msg, this.ABOUT);
 	}
 
@@ -37,17 +37,17 @@ class Source extends Command {
 	get usage() { return ''; }
 	get description() { return 'see my source code'; }
 
-	init() {
+	*init() {
 		// Source code URL.
 		this.SOURCE = 'https://github.com/ruiqimao/rmc';
 	}
 
-	authorize(msg, suffix, next) {
+	*authorize(msg, suffix) {
 		// Everyone is allowed to see the source.
-		next(true);
+		return true;
 	}
 
-	process(msg, suffix) {
+	*process(msg, suffix) {
 		this.client.sendMessage(msg, this.SOURCE);
 	}
 
@@ -58,12 +58,12 @@ class Uptime extends Command {
 	get usage() { return ''; }
 	get description() { return 'find out how long I\'ve been running'; }
 
-	authorize(msg, suffix, next) {
+	*authorize(msg, suffix, next) {
 		// Everyone is allowed to check uptime.
-		next(true);
+		return true;
 	}
 
-	process(msg, suffix) {
+	*process(msg, suffix) {
 		// Get the client uptime.
 		const uptime = this.client.uptime;
 

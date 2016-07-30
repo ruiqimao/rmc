@@ -14,17 +14,17 @@ class Pet extends Command {
 	get usage() { return ''; }
 	get description() { return 'pet me for being a good robot!'; }
 
-	init() {
+	*init() {
 		// Pet counter.
 		this.pets = 0;
 	}
 
-	authorize(msg, suffix, next) {
+	*authorize(msg, suffix) {
 		// Everyone is allowed to pet RM-C.
-		next(true);
+		return true;
 	}
 
-	process(msg, suffix) {
+	*process(msg, suffix) {
 		// Respond with the count.
 		let countString = ++ this.pets + ' time';
 		if (this.pets > 1) countString += 's';
@@ -47,7 +47,7 @@ class Slap extends Command {
 	get usage() { return ''; }
 	get description() { return 'slap me for being a bad robot :('; }
 
-	init() {
+	*init() {
 		// Any of the responses RM-C can give when slapped.
 		this.responses = [
 			'Don\'t touch me.',
@@ -61,12 +61,12 @@ class Slap extends Command {
 		];
 	}
 
-	authorize(msg, suffix, next) {
+	*authorize(msg, suffix) {
 		// Everyone is allowed to slap RM-C.
-		next(true);
+		return true;
 	}
 
-	process(msg, suffix) {
+	*process(msg, suffix) {
 		// Respond with a random message.
 		const index = Math.floor(Math.random() * this.responses.length);
 		this.client.sendMessage(msg, this.responses[index]);

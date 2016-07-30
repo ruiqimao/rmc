@@ -1,21 +1,27 @@
 import Discord from 'discord.js';
 
 import Bot from './bot';
-import Database from './db';
 
 import Authorization from './authorization';
 import Config from './bot/config';
 
 export function main() {
 
-	// Check the token.
+	// Validate the authorization file.
 	if (!Authorization.DISCORD_TOKEN) {
 		console.error('No token specified.');
 		process.exit(1);
 	}
+	if (!Authorization.MONGO_URI) {
+		console.error('No MongoDB URI specified.');
+		process.exit(1);
+	}
 
 	// Create and start the bot.
-	const bot = new Bot(Authorization.DISCORD_TOKEN, Config);
+	const bot = new Bot(
+		Authorization.DISCORD_TOKEN,
+		Authorization.MONGO_URI,
+		Config);
 	bot.start();
 
 	// Catch all the messages from the bot.
