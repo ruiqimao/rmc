@@ -16,7 +16,7 @@
     "mongorito": "^2.1.2",
     "request": "^2.74.0",
     "youtube-dl": "^1.11.1",
-    "babel-polyfill": "^6.9.1",
+    "babel-polyfill": "^6.9.1"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
