@@ -6,7 +6,11 @@ Put an `authorization.js` file in `src`, structured like so:
 ```javascript
 export default {
 	DISCORD_TOKEN: '<Discord Bot Token>',
-	MONGO_URI: '<MongoDB URI>'
+	MONGO_URI: '<MongoDB URI>',
+	OWNERS: [
+		'<Owner 1 ID>',
+		...
+	]
 }
 ```
 
