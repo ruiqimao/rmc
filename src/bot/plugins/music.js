@@ -7,7 +7,7 @@ import BufferStream from 'buffer-stream';
 
 export default class extends Plugin {
 
-	init() {
+	*init() {
 		this.addCommand('play', Play);
 		this.addCommand('skip', Skip);
 
@@ -19,6 +19,14 @@ export default class extends Plugin {
 		// Set the member variables.
 		this.queues = {}; // All queues.
 		this.playing = {}; // All servers that are playing.
+	}
+
+	*destroy() {
+		// Stop playing on all servers.
+		for (const server of Object.keys(this.playing)) {
+			const connection = this.getVoiceConnection(server);
+			if (connection) connection.stopPlaying();
+		}
 	}
 
 	/*
@@ -78,8 +86,6 @@ export default class extends Plugin {
 
 		// Send a message saying what is being played.
 		command.client.sendMessage(channel, 'I\'m now playing `' + vid.title + '`.');
-
-		console.log(vid);
 
 		// Pipe the video into a buffer stream.
 		const buffer = new BufferStream(this.INITIAL_BUFFER, this.MAX_BUFFER);
@@ -144,13 +150,13 @@ class Play extends Command {
 			return this.client.reply(msg, 'Give me a video, dumbass.');
 		}
 
-		// Send a confirmation message.
-		const response = yield this.client.sendMessage(msg, 'Okay, I\'m looking for that video.');
-
 		// If the suffix doesn't start with http, assume it's a search.
 		if (!suffix.startsWith('http')) {
 			suffix = 'gvsearch1:' + suffix;
 		}
+
+		// Send a confirmation message.
+		const response = yield this.client.sendMessage(msg, 'Okay, I\'m looking for that video.');
 
 		// Get the video info.
 		youtubedl.getInfo(suffix, ['-q', '--no-warnings', '--force-ipv4'], (err, info) => {

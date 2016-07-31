@@ -16,11 +16,14 @@ export function main() {
 		console.error('No MongoDB URI specified.');
 		process.exit(1);
 	}
+	if (!Authorization.OWNERS || Authorization.OWNERS.length == 0) {
+		console.error('No owners specified.');
+		process.exit(1);
+	}
 
 	// Create and start the bot.
 	const bot = new Bot(
-		Authorization.DISCORD_TOKEN,
-		Authorization.MONGO_URI,
+		Authorization,
 		Config);
 	bot.start();
 

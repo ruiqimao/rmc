@@ -2,7 +2,7 @@ import { Plugin, Command, Util } from 'plugin';
 
 export default class extends Plugin {
 
-	init() {
+	*init() {
 		this.addCommand('join', Join);
 		this.addCommand('leave', Leave);
 	}
@@ -15,10 +15,7 @@ class Join extends Command {
 	get description() { return 'join a voice channel'; }
 
 	*authorize(msg, suffix) {
-		const allowed =
-			  !msg.channel.isPrivate && // Cannot be PM.
-			  Util.checkRole(msg.server, msg.author, this.config.COMMANDER); // Must be a commander.
-		return allowed;
+		return !msg.channel.isPrivate; // Cannot be PM.
 	}
 
 	*process(msg, suffix) {
@@ -42,10 +39,7 @@ class Leave extends Command {
 	get description() { return 'leave a voice channel'; }
 
 	*authorize(msg, suffix) {
-		const allowed =
-			  !msg.channel.isPrivate && // Cannot be PM.
-			  Util.checkRole(msg.server, msg.author, this.config.COMMANDER); // Must be a commander.
-		return allowed;
+		return !msg.channel.isPrivate; // Cannot be PM.
 	}
 
 	*process(msg, suffix) {

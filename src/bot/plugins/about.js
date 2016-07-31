@@ -2,7 +2,7 @@ import { Plugin, Command } from 'plugin';
 
 export default class extends Plugin {
 
-	init() {
+	*init() {
 		this.addCommand('about', About);
 		this.addCommand('source', Source);
 		this.addCommand('uptime', Uptime);

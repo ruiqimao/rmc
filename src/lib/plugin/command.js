@@ -16,14 +16,44 @@ export default class Command {
 		this.client = plugin.client;
 		this.config = plugin.config;
 
+		// Steal functions from the plugin.
+		this.getVoiceConnection = plugin.getVoiceConnection;
+
 		// Make sure the proper virtual methods exist.
 		if (this.usage === undefined)       throw new TypeError('Must have a usage.');
 		if (this.description === undefined) throw new TypeError('Must have a description.');
 		if (this.authorize === undefined)   throw new TypeError('Must implement authorize().');
 		if (this.process === undefined)     throw new TypeError('Must implement process().');
+	}
 
-		// Call init() if it exists.
-		if (this.init) co(this.init.bind(this));
+	/*
+	 * Load the command.
+	 *
+	 * @return A Promise after the command has loaded.
+	 */
+	load() {
+		if (this.init) {
+			// Call init() if it exists.
+			return co(this.init.bind(this));
+		} else {
+			// Otherwise, return a resolved Promise.
+			return Promise.resolve();
+		}
+	}
+
+	/*
+	 * Unload the command.
+	 *
+	 * @return A Promise after the command has unloaded.
+	 */
+	unload() {
+		if (this.destroy) {
+			// Call destroy() if it exists.
+			return co(this.destroy.bind(this));
+		} else {
+			// Otherwise, return a resolved Promise.
+			return Promise.resolve();
+		}
 	}
 
 	/*
@@ -31,38 +61,25 @@ export default class Command {
 	 *
 	 * @param msg The message that triggered the command.
 	 * @param suffix The suffix of the command.
+	 *
+	 * @return A Promise after the command is finished.
 	 */
 	run(msg, suffix) {
-		// Check permissions.
-		co(this.authorize.bind(this), msg, suffix).then((allowed) => {
-			if (allowed) {
+		return co(function*() {
+			// Check permissions.
+			if (yield co(this.authorize.bind(this), msg, suffix)) {
 				// Run.
-				co(this.process.bind(this), msg, suffix).catch(() => {
+				return co(this.process.bind(this), msg, suffix).catch(() => {
 					this.errorOccurred(msg);
 				});
 			} else {
 				// Don't run.
 				this.permissionDenied(msg);
+
+				// Return a resolved Promise.
+				return Promise.resolve();
 			}
-		}).catch(() => {
-			this.errorOccurred(msg);
-		});
-	}
-
-	/*
-	 * Get the voice connection RM-C is connected to.
-	 *
-	 * @param server The server to look for.
-	 *
-	 * @return The voice connection associated with the server, null if it doesn't exist.
-	 */
-	getVoiceConnection(server) {
-		// Get all connections associated with the server.
-		const connections = this.client.voiceConnections.filter((v) => v.voiceChannel.server.equals(server));
-
-		// Return the connection.
-		if (connections.length == 0) return null;
-		return connections[0];
+		}.bind(this));
 	}
 
 	/*

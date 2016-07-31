@@ -2,7 +2,7 @@ import { Plugin, Command, Util } from 'plugin';
 
 export default class extends Plugin {
 
-	init() {
+	*init() {
 		this.addCommand('purge', Purge);
 	}
 

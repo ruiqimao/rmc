@@ -10,7 +10,7 @@ function useES5() {
 		// Add the lib folder as a path for imports.
 		require('app-module-path').addPath(__dirname + '/lib/lib');
 
-		// Include polyfill for generators.
+		// Include polyfills.
 		require('babel-polyfill');
 
 		// Start running.
@@ -23,7 +23,7 @@ function useES5() {
 		// Transpile from ES6 to ES5.
 		require('babel-register');
 
-		// Include polyfill for generators.
+		// Include polyfills.
 		require('babel-polyfill');
 
 		// Start running.
