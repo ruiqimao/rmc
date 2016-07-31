@@ -79,6 +79,8 @@ export default class extends Plugin {
 		// Send a message saying what is being played.
 		command.client.sendMessage(channel, 'I\'m now playing `' + vid.title + '`.');
 
+		console.log(vid);
+
 		// Pipe the video into a buffer stream.
 		const buffer = new BufferStream(this.INITIAL_BUFFER, this.MAX_BUFFER);
 		request.get(vid.url).pipe(buffer);
@@ -154,12 +156,6 @@ class Play extends Command {
 		youtubedl.getInfo(suffix, ['-q', '--no-warnings', '--force-ipv4'], (err, info) => {
 			if (err || info.format_id.startsWith('0')) { // Unknown format is invalid.
 				return this.client.updateMessage(response, msg.author + ', that\'s not a real video, stupid.');
-			}
-
-			// Get an audio-only format if possible.
-			if (info.formats) {
-				const audioFormats = info.formats.filter((f) => f.vcodec == 'none');
-				if (audioFormats.length > 0) info.url = audioFormats[0].url;
 			}
 
 			// Send a message confirming the video's been added.
