@@ -3,6 +3,8 @@ import EventEmitter from 'events';
 import Mongorito from 'mongorito';
 
 import co from 'co';
+import HTTP from 'http';
+import Express from 'express';
 
 /*
  * Class for RMC bot.
@@ -42,34 +44,43 @@ export default class Bot extends EventEmitter {
 			this.db = db;
 			console.log('Connected to database!');
 
-			// Login.
-			this.client.loginWithToken(this.token);
+			// Start a web server.
+			this.express = Express();
+			this.server = HTTP.createServer(this.express);
+			this.server.listen(this.config.SERVER_PORT, (err) => {
+				if (err) return console.error('Could not start web server.');
+				console.log('Started web server on port ' + this.config.SERVER_PORT + '!');
 
-			// Wait for the client to be ready.
-			this.client.on('ready', () => {
+				// Login.
+				this.client.loginWithToken(this.token);
 
-				// Set the logged in flag.
-				this.loggedIn = true;
-				this.emit('connected');
+				// Wait for the client to be ready.
+				this.client.on('ready', () => {
 
-				// Initialize all the plugins.
-				this.loadPlugins().then(() => {
-					// Set the status and game.
-					this.client.setStatus('online', this.config.GAME);
+					// Set the logged in flag.
+					this.loggedIn = true;
+					this.emit('connected');
 
-					// Read messages.
-					this.client.on('message', (msg) => {
-						this.handleMessage(msg);
+					// Initialize all the plugins.
+					this.loadPlugins().then(() => {
+						// Set the status and game.
+						this.client.setStatus('online', this.config.GAME);
+
+						// Read messages.
+						this.client.on('message', (msg) => {
+							this.handleMessage(msg);
+						});
+
+						// Handle a disconnection.
+						this.client.on('disconnected', () => {
+							this.emit('disconnected', this.gracefulShutdown);
+						});
+
+						// Emit a ready event.
+						this.emit('ready');
 					});
-
-					// Handle a disconnection.
-					this.client.on('disconnected', () => {
-						this.emit('disconnected', this.gracefulShutdown);
-					});
-
-					// Emit a ready event.
-					this.emit('ready');
 				});
+
 			});
 
 		}).catch((err) => {
@@ -188,6 +199,9 @@ export default class Bot extends EventEmitter {
 
 		// Close the database connection.
 		if (this.db) this.db.close();
+
+		// Close the server.
+		if (this.server) this.server.close();
 	}
 
 	/*

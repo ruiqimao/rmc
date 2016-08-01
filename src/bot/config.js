@@ -5,7 +5,9 @@ export default {
 
 	COMMAND_PREFIX: '+', // Command prefix.
 
-	DASHBOARD_URL: 'http://rmc.sized.io',
+	SERVER_PORT: 5003, // Server port.
+
+	SERVER_URL: 'http://rmc.sized.io', // Server URL.
 
 	PLUGINS: [ // All enabled plugins.
 		'meta',

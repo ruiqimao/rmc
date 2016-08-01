@@ -41,7 +41,7 @@ export default class Dashboard extends Command {
 			yield dashboard.save();
 
 			// Let the user know the new dashboard link in a PM.
-			this.client.sendMessage(msg.author, this.config.DASHBOARD_URL + '/' + token);
+			this.client.sendMessage(msg.author, this.config.SERVER_URL + '/dashboard/' + token);
 			this.client.sendMessage(msg, 'Check your PMs.');
 
 			return;
@@ -73,7 +73,7 @@ export default class Dashboard extends Command {
 		}
 
 		// Let the user know the dashboard link in a PM.
-		this.client.sendMessage(msg.author, this.config.DASHBOARD_URL + '/' + token);
+		this.client.sendMessage(msg.author, this.config.SERVER_URL + '/dashboard/' + token);
 		this.client.sendMessage(msg, 'Check your PMs.');
 	}
 
