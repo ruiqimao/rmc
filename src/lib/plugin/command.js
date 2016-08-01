@@ -17,7 +17,9 @@ export default class Command {
 		this.config = plugin.config;
 
 		// Steal functions from the plugin.
-		this.getVoiceConnection = plugin.getVoiceConnection;
+		this.getVoiceConnection = plugin.getVoiceConnection.bind(plugin);
+		this.permissionDenied = plugin.permissionDenied.bind(plugin);
+		this.errorOccurred = plugin.errorOccurred.bind(plugin);
 
 		// Make sure the proper virtual methods exist.
 		if (this.usage === undefined)       throw new TypeError('Must have a usage.');
@@ -80,24 +82,6 @@ export default class Command {
 				return Promise.resolve();
 			}
 		}.bind(this));
-	}
-
-	/*
-	 * Sends a permission denied reply.
-	 *
-	 * @param channel A Channel resolvable.
-	 */
-	permissionDenied(channel) {
-		this.client.reply(channel, 'I don\'t recognize your authority.');
-	}
-
-	/*
-	 * Sends a message saying something went wrong.
-	 *
-	 * @param chanel A channel resolvable.
-	 */
-	errorOccurred(channel) {
-		this.client.sendMessage(channel, 'My creator is an idiot. Something went wrong!');
 	}
 
 }

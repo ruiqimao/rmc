@@ -16,6 +16,22 @@ export default class Plugin {
 		this.client = bot.client;
 		this.config = bot.config;
 		this.commands = [];
+
+		// Set the constants.
+		this.PERMISSION_DENIED_RESPONSES = [
+			'I don\'t recognize your authority.',
+			'No.',
+			'Fuck off.',
+			'No, fuck you.',
+			'Who do you think you are, telling me what to do?',
+			'Don\'t tell me what to do.',
+			'HAHAHA no.',
+			'Ehhh...',
+			'Nah.',
+			'Yeah no.',
+			'Screw that.',
+			'Beep boop, permission denied, fucker!'
+		];
 	}
 
 	/*
@@ -90,6 +106,25 @@ export default class Plugin {
 		// Return the connection.
 		if (connections.length == 0) return null;
 		return connections[0];
+	}
+
+	/*
+	 * Sends a permission denied reply.
+	 *
+	 * @param channel A Channel resolvable.
+	 */
+	permissionDenied(channel) {
+		const index = Math.floor(Math.random() * this.PERMISSION_DENIED_RESPONSES.length);
+		this.client.reply(channel, this.PERMISSION_DENIED_RESPONSES[index]);
+	}
+
+	/*
+	 * Sends a message saying something went wrong.
+	 *
+	 * @param chanel A channel resolvable.
+	 */
+	errorOccurred(channel) {
+		this.client.sendMessage(channel, 'My creator is an idiot. Something went wrong!');
 	}
 
 }
