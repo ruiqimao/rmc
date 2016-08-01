@@ -23,7 +23,9 @@ export default class Bot extends EventEmitter {
 		this.dbUri = authorization.MONGO_URI;
 		this.owners = authorization.OWNERS;
 		this.config = config;
-		this.client = new Client();
+		this.client = new Client({
+			forceFetchUsers: true
+		});
 		this.db = null;
 		this.plugins = [];
 		this.commands = {};

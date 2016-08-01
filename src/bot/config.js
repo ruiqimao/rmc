@@ -14,6 +14,7 @@ export default {
 		'purge',
 		'voice',
 		'music',
-		'dictionary'
+		'dictionary',
+		'stats'
 	]
 }
