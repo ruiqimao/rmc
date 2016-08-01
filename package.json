@@ -16,6 +16,7 @@
     "discord.js": "^8.0.0",
     "mongorito": "^2.1.2",
     "request": "^2.74.0",
+    "request-promise": "^4.1.0",
     "youtube-dl": "^1.11.1"
   },
   "devDependencies": {

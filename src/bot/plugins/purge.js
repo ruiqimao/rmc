@@ -10,8 +10,8 @@ export default class extends Plugin {
 
 class Purge extends Command {
 
-	get usage() { return ''; }
-	get description() { return 'erase the last 1000 messages in the channel'; }
+	get usage() { return '<number>'; }
+	get description() { return 'erase some number of messages in the channel'; }
 
 	*authorize(msg, suffix) {
 		const allowed =
@@ -21,18 +21,23 @@ class Purge extends Command {
 	}
 
 	*process(msg, suffix) {
+		// Check the number of messages to delete.
+		const number = parseInt(suffix);
+		if (isNaN(number)) return this.client.reply(msg, 'Give me a number of messages to delete. A NUMBER, dumbass.');
+		const numberSuffix = (number == 1 ? '' : 's');
+
 		// Confirm the command.
 		const response = yield this.client.awaitResponse(
 			msg,
-			'Are you sure you want to delete the last 1000 messages in this channel?');
+			'Are you sure you want to delete the last ' + number + ' message' + numberSuffix +' in this channel?');
 
 		// Check whether the response was affirmative.
 		if (Util.checkAffirmative(response.content)) {
 			// Tell the user the messages are being deleted.
-			yield this.client.sendMessage(msg, 'Alright, I\'m deleting 1000 messages!');
+			yield this.client.sendMessage(msg, 'Alright, I\'m deleting ' + number + ' message' + numberSuffix + '!');
 
 			// Get the message logs.
-			const messages = yield this.client.getChannelLogs(msg, 1000);
+			const messages = yield this.client.getChannelLogs(msg, number);
 
 			// Delete them all!
 			this.client.deleteMessages(messages);

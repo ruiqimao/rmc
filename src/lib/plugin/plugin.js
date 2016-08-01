@@ -1,3 +1,4 @@
+import { Model } from 'mongorito';
 import co from 'co';
 
 /*
@@ -15,6 +16,7 @@ export default class Plugin {
 		this.bot = bot;
 		this.client = bot.client;
 		this.config = bot.config;
+		this.db = bot.db;
 		this.commands = [];
 
 		// Set the constants.
@@ -125,6 +127,21 @@ export default class Plugin {
 	 */
 	errorOccurred(channel) {
 		this.client.sendMessage(channel, 'My creator is an idiot. Something went wrong!');
+	}
+
+	/*
+	 * Create a Mongorito model using a collection name.
+	 *
+	 * @param collection The collection name to use.
+	 *
+	 * @return A Mongorito Model.
+	 */
+	createModel(collection) {
+		const db = this.db;
+		return class extends Model {
+			db() { return db; }
+			collection() { return collection; }
+		};
 	}
 
 }

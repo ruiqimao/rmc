@@ -15,6 +15,7 @@ export default class Command {
 		this.plugin = plugin;
 		this.client = plugin.client;
 		this.config = plugin.config;
+		this.db = plugin.db;
 
 		// Steal functions from the plugin.
 		this.getVoiceConnection = plugin.getVoiceConnection.bind(plugin);
@@ -71,7 +72,8 @@ export default class Command {
 			// Check permissions.
 			if (yield co(this.authorize.bind(this), msg, suffix)) {
 				// Run.
-				return co(this.process.bind(this), msg, suffix).catch(() => {
+				return co(this.process.bind(this), msg, suffix).catch((err) => {
+					console.error(err);
 					this.errorOccurred(msg);
 				});
 			} else {

@@ -89,8 +89,9 @@ export default class Bot extends EventEmitter {
 			for (const plugin of this.config.PLUGINS) {
 				yield this.loadPlugin(plugin).then(() => {
 					console.log('Loaded plugin \'' + plugin + '\'.');
-				}).catch(() => {
+				}).catch((err) => {
 					console.error('Could not load plugin \'' + plugin + '\'.');
+					console.error(err);
 				});
 			}
 		}.bind(this));
@@ -151,7 +152,7 @@ export default class Bot extends EventEmitter {
 			yield plugin.unload();
 
 			// Remove the plugin.
-			this.plugins.splice(index, 1);;
+			this.plugins.splice(index, 1);
 
 			// Rebuild the command cache.
 			this.loadCommandCache();
