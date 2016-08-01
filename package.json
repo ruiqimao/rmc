@@ -12,6 +12,7 @@
   "dependencies": {
     "app-module-path": "^1.1.0",
     "babel-polyfill": "^6.9.1",
+    "crypto": "0.0.3",
     "delay-stream": "0.0.3",
     "discord.js": "^8.0.0",
     "mongorito": "^2.1.2",

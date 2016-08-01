@@ -1,14 +1,6 @@
-import { Plugin, Command } from 'plugin';
+import { Command } from 'plugin';
 
-export default class extends Plugin {
-
-	*init() {
-		this.addCommand('choose', Choose);
-	}
-
-}
-
-class Choose extends Command {
+export default class Choose extends Command {
 
 	get usage() { return '<choice1>;[choice2];...'; }
 	get description() { return 'randomly choose something'; }

@@ -13,6 +13,7 @@ export default class Command {
 	constructor(plugin) {
 		// Assign the member variables.
 		this.plugin = plugin;
+		this.bot = plugin.bot;
 		this.client = plugin.client;
 		this.config = plugin.config;
 		this.db = plugin.db;

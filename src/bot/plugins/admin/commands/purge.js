@@ -1,14 +1,6 @@
-import { Plugin, Command, Util } from 'plugin';
+import { Command, Util } from 'plugin';
 
-export default class extends Plugin {
-
-	*init() {
-		this.addCommand('purge', Purge);
-	}
-
-}
-
-class Purge extends Command {
+export default class Purge extends Command {
 
 	get usage() { return '<number>'; }
 	get description() { return 'erase some number of messages in the channel'; }

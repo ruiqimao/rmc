@@ -1,6 +1,8 @@
-import { Plugin, Command } from 'plugin';
+import { Plugin } from 'plugin';
 
-import youtubedl from 'youtube-dl';
+import Play from './commands/play';
+import Skip from './commands/skip';
+
 import request from 'request';
 
 import BufferStream from 'buffer-stream';
@@ -120,105 +122,6 @@ export default class extends Plugin {
 		if (server.id in this.queues) this.queues[server.id].length = 0;
 		delete this.queues[server.id];
 		delete this.playing[server.id];
-	}
-
-}
-
-class Play extends Command {
-
-	get usage() { return '<video-url>|<search>'; }
-	get description() { return 'play audio from a video (YouTube, Vimeo, Youku, etc.)'; }
-
-	*authorize(msg, suffix) {
-		return this.plugin.authorize(this, msg);
-	}
-
-	*process(msg, suffix) {
-		// Get the queue.
-		if (!(msg.server.id in this.plugin.queues)) {
-			this.plugin.queues[msg.server.id] = [];
-		}
-		const queue = this.plugin.queues[msg.server.id];
-
-		// Check the queue size.
-		if (queue.length >= this.plugin.MAX_QUEUE) {
-			return this.client.reply(msg, 'Overload! I can\'t queue that many songs. Feed me more RAM.');
-		}
-
-		// Validate the argument.
-		if (suffix.length == 0) {
-			return this.client.reply(msg, 'Give me a video, dumbass.');
-		}
-
-		// If the suffix doesn't start with http, assume it's a search.
-		if (!suffix.startsWith('http')) {
-			suffix = 'gvsearch1:' + suffix;
-		}
-
-		// Send a confirmation message.
-		const response = yield this.client.sendMessage(msg, 'Okay, I\'m looking for that video.');
-
-		// Get the video info.
-		youtubedl.getInfo(suffix, ['-q', '--no-warnings', '--force-ipv4'], (err, info) => {
-			if (err || info.format_id.startsWith('0')) { // Unknown format is invalid.
-				return this.client.updateMessage(response, msg.author + ', that\'s not a real video, stupid.');
-			}
-
-			// Send a message confirming the video's been added.
-			const title = info.title.replace(/`/g, '\\`');
-			this.client.updateMessage(response, 'I\'ve queued up `' + title + '`.');
-
-			// Add the video to queue.
-			this.plugin.addToQueue(this, msg.channel, info, queue);
-		});
-	}
-
-}
-
-class Skip extends Command {
-
-	get usage() { return '[number|all]'; }
-	get description() { return 'skip 1 or more songs'; }
-
-	*authorize(msg, suffix) {
-		return this.plugin.authorize(this, msg);
-	}
-
-	*process(msg, suffix) {
-		// Get the voice connection.
-		const connection = this.getVoiceConnection(msg.server);
-
-		// Check the number.
-		if (suffix == 'all') {
-			// Skip everthing.
-			this.plugin.clearQueue(msg.server);
-		} else if (suffix == '') {
-			// Just skip one, so do nothing here.
-		} else {
-			// Check if the number is valid and positive.
-			let number;
-			if (isNaN(suffix) || (number = parseInt(suffix)) < 0) {
-				this.client.reply(msg, 'Are you serious? Go back to school and learn math again, please.');
-				return;
-			}
-
-			// Remove the appropriate number of entries from the queue.
-			if (msg.server.id in this.plugin.queues) {
-				const queue = this.plugin.queues[msg.server.id];
-				while (queue.length > 0 && number -- > 1) {
-					queue.shift();
-				}
-			}
-		}
-
-		// Stop playback.
-		connection.stopPlaying();
-
-		// Send a message.
-		let skipString = 'Okay, skipped';
-		if (suffix) skipString += ' ' + suffix;
-		skipString += '!';
-		this.client.sendMessage(msg, skipString);
 	}
 
 }

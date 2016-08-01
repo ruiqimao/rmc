@@ -1,17 +1,18 @@
 export default {
-	GAME: 'Beating Up AR-D', // GAme to play.
+	GAME: 'Beating Up AR-D', // Game to play.
 
 	COMMANDER: 'Kuhne', // Commander role.
 
 	COMMAND_PREFIX: '+', // Command prefix.
 
+	DASHBOARD_URL: 'http://rmc.sized.io',
+
 	PLUGINS: [ // All enabled plugins.
+		'meta',
 		'about',
 		'interact',
-		'say',
-		'choose',
-		'picture',
-		'purge',
+		'fun',
+		'admin',
 		'voice',
 		'music',
 		'dictionary',
