@@ -3,7 +3,7 @@ export default {
 
 	COMMANDER: 'Kuhne', // Commander role.
 
-	COMMAND_PREFIX: '!', // Command prefix.
+	COMMAND_PREFIX: '+', // Command prefix.
 
 	PLUGINS: [ // All enabled plugins.
 		'about',
