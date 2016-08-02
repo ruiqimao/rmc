@@ -96,6 +96,16 @@
     50% { -webkit-transform: scale(1.05, 1.05); transform: scale(1.05, 1.05); opacity: 1.0;}
     100% { -webkit-transform: scale(1, 1); transform: scale(1, 1); opacity: 0.9; }
 }
+._hr_x9qji_1 {
+	border:0;
+	outline:0;
+	-webkit-appearance:none;
+	   -moz-appearance:none;
+	        appearance:none;
+	height:1px;
+	background:#dddddd;
+	margin:1rem 0;
+}
 ._panel_1a7sd_1 {
 	background:#ffffff;
 	border:1px solid #e0e0e0;
@@ -117,16 +127,6 @@
 
 ._panelContent_1a7sd_20 {
 	padding:2rem;
-}
-._hr_x9qji_1 {
-	border:0;
-	outline:0;
-	-webkit-appearance:none;
-	   -moz-appearance:none;
-	        appearance:none;
-	height:1px;
-	background:#dddddd;
-	margin:1rem 0;
 }
 ._button_1f0vh_1 { }
 

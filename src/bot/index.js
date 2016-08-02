@@ -295,7 +295,7 @@ export default class Bot extends EventEmitter {
 	*getData(server) {
 		return {
 			// Server name.
-			'name': (this.client.servers.get(server).name),
+			'name': (this.client.servers.get('id', server).name),
 
 			// Command prefix.
 			'prefix': (yield this.Prefix.getEntry(server, this.config.COMMAND_PREFIX)).val()
