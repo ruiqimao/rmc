@@ -1,10 +1,12 @@
 import { Client } from 'discord.js';
 import EventEmitter from 'events';
-import Mongorito from 'mongorito';
+import Mongorito, { Model } from 'mongorito';
 
 import co from 'co';
 import HTTP from 'http';
 import Express from 'express';
+import Hogan from 'hogan-express';
+import BodyParser from 'body-parser';
 
 /*
  * Class for RMC bot.
@@ -33,6 +35,30 @@ export default class Bot extends EventEmitter {
 		this.commands = {};
 		this.loggedIn = false;
 		this.gracefulShutdown = false;
+
+		// Set constants.
+		this.PERMISSION_DENIED_RESPONSES = [
+			'I don\'t recognize your authority.',
+			'No.',
+			'Fuck off.',
+			'No, fuck you.',
+			'Who do you think you are, telling me what to do?',
+			'Don\'t tell me what to do.',
+			'HAHAHA no.',
+			'Ehhh...',
+			'Nah.',
+			'Yeah no.',
+			'Screw that.',
+			'Beep boop, permission denied, fucker!'
+		];
+
+		// Set functions to export to children.
+		this.exportFunctions = [
+			'getVoiceConnection',
+			'permissionDenied',
+			'errorOccurred',
+			'createModel'
+		];
 	}
 
 	/*
@@ -44,8 +70,23 @@ export default class Bot extends EventEmitter {
 			this.db = db;
 			console.log('Connected to database!');
 
-			// Start a web server.
+			// Create models.
+			this.Prefix = this.createModel('command-prefix');
+
+			// Create a web server.
 			this.express = Express();
+
+			// Set up body parser.
+			this.express.use(BodyParser.json());
+			this.express.use(BodyParser.urlencoded({ extended: true }));
+
+			// Set up templates.
+			this.express.engine('html', Hogan);
+
+			// Set up static files.
+			this.express.use(Express.static(__dirname + '/dashboard/public'));
+
+			// Start listening on the server.
 			this.server = HTTP.createServer(this.express);
 			this.server.listen(this.config.SERVER_PORT, (err) => {
 				if (err) return console.error('Could not start web server.');
@@ -210,25 +251,71 @@ export default class Bot extends EventEmitter {
 	 * @param msg The message.
 	 */
 	handleMessage(msg) {
-		// Ignore messages from herself.
-		if (msg.author.equals(this.client.user)) return;
+		co(function*() {
+			// Ignore messages from herself.
+			if (msg.author.equals(this.client.user)) return;
 
-		// Ping.
-		if (msg.content === 'ping') {
-			return this.client.sendMessage(msg, 'pong');
-		}
+			// Ping.
+			if (msg.content === 'ping') {
+				return this.client.sendMessage(msg, 'pong');
+			}
 
-		// Trim the message and check if the message is a command.
-		const message = msg.content.trim();
-		if (message.startsWith(this.config.COMMAND_PREFIX)) {
-			// Get the command.
-			const command = message.substring(this.config.COMMAND_PREFIX.length).split(' ')[0];
+			// Trim the message and check if the message is a command.
+			const message = msg.content.trim();
 
-			// Get the suffix.
-			const suffix = message.substring(command.length + this.config.COMMAND_PREFIX.length).trim();
+			// Get the prefix.
+			let prefix;
+			if (msg.channel.isPrivate) {
+				prefix = this.config.COMMAND_PREFIX;
+			} else {
+				prefix = (yield this.Prefix.getEntry(msg.server.id, this.config.COMMAND_PREFIX)).val();
+			}
 
-			// Handle the command.
-			this.handleCommand(msg, command, suffix);
+			// Check if the message is a command.
+			if (message.startsWith(prefix)) {
+				// Get the command.
+				const command = message.substring(prefix.length).split(' ')[0];
+
+				// Get the suffix.
+				const suffix = message.substring(command.length + prefix.length).trim();
+
+				// Handle the command.
+				this.handleCommand(msg, command, suffix);
+			}
+		}.bind(this)).catch((err) => console.error(err));
+	}
+
+	/*
+	 * Get data for the dashboard.
+	 *
+	 * @param server The server id.
+	 *
+	 * @return The relevant information.
+	 */
+	*getData(server) {
+		return {
+			// Server name.
+			'name': (this.client.servers.get(server).name),
+
+			// Command prefix.
+			'prefix': (yield this.Prefix.getEntry(server, this.config.COMMAND_PREFIX)).val()
+		};
+	}
+
+	/*
+	 * Save data for the dashboard.
+	 *
+	 * @param server The server id.
+	 * @param data The data to save.
+	 *
+	 * @return The relevant information.
+	 */
+	*saveData(server, data) {
+		// Save the command prefix.
+		if (data.prefix.length > 0 && data.prefix.length < 4) {
+			const entry = yield this.Prefix.getEntry(server, this.config.COMMAND_PREFIX);
+			entry.val(data.prefix);
+			yield entry.save();
 		}
 	}
 
@@ -245,6 +332,96 @@ export default class Bot extends EventEmitter {
 			// Execute the command.
 			this.commands[command].run(msg, suffix);
 		}
+	}
+
+	/*
+	 * Get the voice connection RM-C is connected to.
+	 *
+	 * @param server The server to look for.
+	 *
+	 * @return The voice connection associated with the server, null if it doesn't exist.
+	 */
+	getVoiceConnection(server) {
+		// Get all connections associated with the server.
+		const connections = this.client.voiceConnections.filter(
+			(v) => v.voiceChannel.server.equals(server) || v.voiceChannel.server.id == server
+		);
+
+		// Return the connection.
+		if (connections.length == 0) return null;
+		return connections[0];
+	}
+
+	/*
+	 * Sends a permission denied reply.
+	 *
+	 * @param channel A Channel resolvable.
+	 */
+	permissionDenied(channel) {
+		const index = Math.floor(Math.random() * this.PERMISSION_DENIED_RESPONSES.length);
+		this.client.reply(channel, this.PERMISSION_DENIED_RESPONSES[index]);
+	}
+
+	/*
+	 * Sends a message saying something went wrong.
+	 *
+	 * @param chanel A channel resolvable.
+	 */
+	errorOccurred(channel) {
+		this.client.sendMessage(channel, 'My creator is an idiot. Something went wrong!');
+	}
+
+	/*
+	 * Create a Mongorito model using a collection name.
+	 *
+	 * @param collection The collection name to use.
+	 *
+	 * @return A Mongorito Model.
+	 */
+	createModel(collection) {
+		const db = this.db;
+		const bot = this;
+		return class extends Model {
+			db() { return db; }
+			collection() { return collection; }
+			bot() { return bot; }
+
+			/*
+			 * Get the entry for the server. For models with exactly one entry per server.
+			 *
+			 * @param server The server id.
+			 * @param def The default value.
+			 *
+			 * @return The entry.
+			 */
+			static *getEntry(server, def) {
+				const entries = yield this.limit(1).find({
+					'server': server
+				});
+				if (entries.length > 0) {
+					return entries[0];
+				} else {
+					return new this({
+						'server': server,
+						'value': def
+					});
+				}
+			}
+
+			/*
+			 * Get or set the 'value' field.
+			 *
+			 * @param val The val to set, if needed.
+			 *
+			 * @return The value.
+			 */
+			val(val) {
+				if (val !== undefined) {
+					this.set('value', val);
+				}
+				return this.get('value');
+			}
+		};
 	}
 
 }

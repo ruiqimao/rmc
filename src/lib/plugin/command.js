@@ -18,10 +18,10 @@ export default class Command {
 		this.config = plugin.config;
 		this.db = plugin.db;
 
-		// Steal functions from the plugin.
-		this.getVoiceConnection = plugin.getVoiceConnection.bind(plugin);
-		this.permissionDenied = plugin.permissionDenied.bind(plugin);
-		this.errorOccurred = plugin.errorOccurred.bind(plugin);
+		// Import functions from the plugin.
+		for (const func of plugin.exportFunctions) {
+			this[func] = plugin[func].bind(plugin);
+		}
 
 		// Make sure the proper virtual methods exist.
 		if (this.usage === undefined)       throw new TypeError('Must have a usage.');

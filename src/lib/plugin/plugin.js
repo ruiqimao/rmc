@@ -1,4 +1,3 @@
-import { Model } from 'mongorito';
 import co from 'co';
 
 /*
@@ -19,21 +18,11 @@ export default class Plugin {
 		this.db = bot.db;
 		this.commands = [];
 
-		// Set the constants.
-		this.PERMISSION_DENIED_RESPONSES = [
-			'I don\'t recognize your authority.',
-			'No.',
-			'Fuck off.',
-			'No, fuck you.',
-			'Who do you think you are, telling me what to do?',
-			'Don\'t tell me what to do.',
-			'HAHAHA no.',
-			'Ehhh...',
-			'Nah.',
-			'Yeah no.',
-			'Screw that.',
-			'Beep boop, permission denied, fucker!'
-		];
+		// Import functions from the bot.
+		for (const func of bot.exportFunctions) {
+			this[func] = bot[func].bind(bot);
+		}
+		this.exportFunctions = bot.exportFunctions;
 	}
 
 	/*
@@ -90,58 +79,6 @@ export default class Plugin {
 	 */
 	removeCommand(name) {
 		this.commands = this.commands.filter((command) => command.name != name);
-	}
-
-	/*
-	 * Get the voice connection RM-C is connected to.
-	 *
-	 * @param server The server to look for.
-	 *
-	 * @return The voice connection associated with the server, null if it doesn't exist.
-	 */
-	getVoiceConnection(server) {
-		// Get all connections associated with the server.
-		const connections = this.client.voiceConnections.filter(
-			(v) => v.voiceChannel.server.equals(server) || v.voiceChannel.server.id == server
-		);
-
-		// Return the connection.
-		if (connections.length == 0) return null;
-		return connections[0];
-	}
-
-	/*
-	 * Sends a permission denied reply.
-	 *
-	 * @param channel A Channel resolvable.
-	 */
-	permissionDenied(channel) {
-		const index = Math.floor(Math.random() * this.PERMISSION_DENIED_RESPONSES.length);
-		this.client.reply(channel, this.PERMISSION_DENIED_RESPONSES[index]);
-	}
-
-	/*
-	 * Sends a message saying something went wrong.
-	 *
-	 * @param chanel A channel resolvable.
-	 */
-	errorOccurred(channel) {
-		this.client.sendMessage(channel, 'My creator is an idiot. Something went wrong!');
-	}
-
-	/*
-	 * Create a Mongorito model using a collection name.
-	 *
-	 * @param collection The collection name to use.
-	 *
-	 * @return A Mongorito Model.
-	 */
-	createModel(collection) {
-		const db = this.db;
-		return class extends Model {
-			db() { return db; }
-			collection() { return collection; }
-		};
 	}
 
 }

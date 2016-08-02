@@ -1,0 +1,8 @@
+.hr {
+	border:0;
+	outline:0;
+	appearance:none;
+	height:1px;
+	background:#dddddd;
+	margin:1rem 0;
+}

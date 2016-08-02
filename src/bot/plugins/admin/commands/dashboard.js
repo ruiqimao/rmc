@@ -15,66 +15,47 @@ export default class Dashboard extends Command {
 	}
 
 	*process(msg, suffix) {
+		// Get the dashboard.
+		const dashboard = yield this.plugin.Dash.getEntry(msg.server.id, null);
+
 		// Check if the user is requesting to generate a new dashboard.
 		if (suffix == 'generate') {
-			// Generate a new dashboard.
-			let dashboard;
-			const dashboards = yield this.plugin.Dash.limit(1).find({
-				'server': msg.server.id
-			});
-			if (dashboards.length > 0) {
-				dashboard = dashboards[0];
-			} else {
-				dashboard = new this.plugin.Dash({
-					'server': msg.server.id
-				});
-			}
-
-			// Generate the new token.
-			const token = Crypto
-				.createHash('md5')
-				.update(msg.server.id + '' + Math.floor(Math.random() * 65535))
-				.digest('hex');
-
-			// Set the new token and save it.
-			dashboard.set('token', token);
+			// Generate the new token and save it.
+			dashboard.val(this.generateRandomToken(msg.server.id));
 			yield dashboard.save();
-
-			// Let the user know the new dashboard link in a PM.
-			this.client.sendMessage(msg.author, this.config.SERVER_URL + '/dashboard/' + token);
-			this.client.sendMessage(msg, 'Check your PMs.');
-
-			return;
 		}
 
 		// Get the dashboard token.
 		let token;
-		const dashboards = yield this.plugin.Dash.limit(1).find({
-			'server': msg.server.id
-		});
-		if (dashboards.length > 0) {
+		if (dashboard.val() !== null) {
 			// Dashboard exists, so get the token.
-			token = dashboards[0].get('token');
+			token = dashboard.val();
 		} else {
 			// Dashboard doesn't exist, so create one.
-			const dashboard = new this.plugin.Dash({
-				'server': msg.server.id
-			});
-
-			// Generate the new token.
-			token = Crypto
-				.createHash('md5')
-				.update(msg.server.id + '' + Math.floor(Math.random() * 65535))
-				.digest('hex');
+			token = this.generateRandomToken(msg.server.id);
 
 			// Set the dashboard and save.
-			dashboard.set('token', token);
+			dashboard.val(token);
 			yield dashboard.save();
 		}
 
 		// Let the user know the dashboard link in a PM.
 		this.client.sendMessage(msg.author, this.config.SERVER_URL + '/dashboard/' + token);
 		this.client.sendMessage(msg, 'Check your PMs.');
+	}
+
+	/*
+	 * Generate a new random token.
+	 *
+	 * @param id The server id.
+	 *
+	 * @return The random token.
+	 */
+	generateRandomToken(id) {
+		return Crypto
+			.createHash('md5')
+			.update(id + Crypto.randomBytes(128).toString('hex'))
+			.digest('hex');
 	}
 
 }

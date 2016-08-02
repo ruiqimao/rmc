@@ -1,0 +1,35 @@
+.button { }
+
+.button.block {
+	display:block;
+}
+
+.button button {
+	appearance:none;
+	outline:none;
+	border:none;
+	background:#34495e;
+	color:rgba(255,255,255,0.9);
+	line-height:2.1rem;
+	font-family:Open Sans;
+	font-size:0.9rem;
+	font-weight:600;
+	padding:0 0.7rem;
+	border-radius:0.2rem;
+	cursor:pointer;
+}
+
+.button.block button {
+	width:100%;
+	font-size:1rem;
+	line-height:2.4rem;
+}
+
+.button button:hover {
+	background:#455a6f;
+}
+
+.button button:disabled {
+	background:#566b7f;
+	cursor:default;
+}

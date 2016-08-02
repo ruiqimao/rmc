@@ -5,26 +5,41 @@
   "main": "entry.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src -d lib"
+    "build": "babel src -d lib --copy-files && npm run build-gui",
+    "build-gui": "NODE_ENV=production NODE_PATH=./lib/lib browserify -v --poll -t [ babelify ] -p [ css-modulesify --after autoprefixer -o lib/bot/dashboard/public/css/bundle.css ] -g uglifyify lib/bot/dashboard/react/index.js -o lib/bot/dashboard/public/js/bundle.js",
+    "watch": "NODE_PATH=./src/lib watchify -v --poll -t [ babelify ] -p [ css-modulesify --after autoprefixer -o src/bot/dashboard/public/css/bundle.css ] -g uglifyify src/bot/dashboard/react/index.js -o src/bot/dashboard/public/js/bundle.js"
   },
   "author": "ruiqimao",
   "license": "ISC",
   "dependencies": {
     "app-module-path": "^1.1.0",
     "babel-polyfill": "^6.9.1",
+    "body-parser": "^1.15.2",
     "crypto": "0.0.3",
     "delay-stream": "0.0.3",
     "discord.js": "^8.0.0",
     "express": "^4.14.0",
+    "hogan-express": "^0.5.2",
     "mongorito": "^2.1.2",
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0",
+    "react-dom-server": "0.0.5",
     "request": "^2.74.0",
     "request-promise": "^4.1.0",
     "youtube-dl": "^1.11.1"
   },
   "devDependencies": {
+    "autoprefixer": "^6.3.7",
     "babel-cli": "^6.11.4",
     "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1",
     "babel-register": "^6.11.6",
-    "co": "^4.6.0"
+    "babelify": "^7.3.0",
+    "classnames": "^2.2.5",
+    "co": "^4.6.0",
+    "css-modulesify": "^0.25.1",
+    "postcss": "^5.1.1",
+    "uglifyify": "^3.0.2",
+    "watchify": "^3.7.0"
   }
 }

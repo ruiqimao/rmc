@@ -1,0 +1,22 @@
+.panel {
+	background:#ffffff;
+	border:1px solid #e0e0e0;
+	margin:1rem;
+	border-radius:0.2rem;
+	overflow:hidden;
+}
+
+.panelTitle {
+	font-family:Open Sans;
+	font-size:1.1rem;
+	font-weight:400;
+	color:#555555;
+	padding:1rem 0.5rem;
+	margin:0 1.5rem;
+	position:relative;
+	border-bottom:1px solid #e0e0e0;
+}
+
+.panelContent {
+	padding:2rem;
+}
