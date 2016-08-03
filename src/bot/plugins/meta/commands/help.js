@@ -19,10 +19,13 @@ export default class Help extends Command {
 			prefix = (yield this.bot.Prefix.getEntry(msg.server.id, this.config.COMMAND_PREFIX)).val();
 		}
 
+		// Get all commands available.
+		const enabledCommands = (yield this.bot.EnabledCommands.getEntry(msg.server.id, this.bot.enabledCommands)).val();
+
 		// Check if the suffix exists.
 		if (suffix.length > 0) {
 			// Show the help entry for a certain command.
-			const entry = yield this.generateEntry(prefix, msg, suffix);
+			const entry = yield this.generateEntry(prefix, msg, suffix, enabledCommands);
 
 			// Check if the entry actually exists.
 			if (entry != null) {
@@ -36,8 +39,8 @@ export default class Help extends Command {
 			// Show all help entries.
 			let helpText = '**Available Directives:**\n';
 			const entries = [];
-			for (const command of Object.keys(this.bot.commands)) {
-				const entry = yield this.generateEntry(prefix, msg, command);
+			for (const command of Object.keys(enabledCommands)) {
+				const entry = yield this.generateEntry(prefix, msg, command, enabledCommands);
 				if (entry != null) {
 					entries.push(entry);
 				}
@@ -53,12 +56,13 @@ export default class Help extends Command {
 	 * @param prefix The command prefix.
 	 * @param msg The message that triggered the command.
 	 * @param command The name of the command to generate the entry from.
+	 * @param commands The enabled commands.
 	 *
 	 * @return The help entry if the command exists and the user is allowed, null otherwise.
 	 */
-	*generateEntry(prefix, msg, command) {
+	*generateEntry(prefix, msg, command, commands) {
 		// Check if the command exists.
-		if (!(command in this.bot.commands)) {
+		if (!commands[command]) {
 			return null;
 		}
 

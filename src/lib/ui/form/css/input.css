@@ -1,29 +1,19 @@
-.input { }
-
-.input label {
-	font-family:Open Sans;
-	font-size:0.9rem;
-	font-weight:400;
-	color:#666666;
-	margin-right:1rem;
-}
-
-.input input {
+.input {
 	outline:none;
 	appearance:none;
 	font-family:Open Sans;
 	font-size:0.9rem;
 	border:none;
-	border-bottom:1px solid #dddddd;
-	border-radius:0.2rem;
-	padding:0.3rem 0.7rem;
-	transition:0.1s;
+	border-radius:0;
+	padding:0.5rem 0.7rem;
+	transition:0.05s;
+	box-shadow:0 1px 0 #dddddd, 0 2px 0 transparent;
 }
 
-.input input:focus {
-	border-bottom:1px solid #34495e;
+.input:focus {
+	box-shadow:0 2px 0 #2980b9;
 }
 
-.input.centered input {
+.input.centered {
 	text-align:center;
 }

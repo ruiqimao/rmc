@@ -7,8 +7,8 @@ export default class Panel extends React.Component {
 
 	render() {
 		const classes = classNames(
-			this.props.className,
-			styles.panel
+			styles.panel,
+			this.props.className
 		);
 
 		return (

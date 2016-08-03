@@ -6,6 +6,7 @@ import requestPromise from 'request-promise';
 
 import BotSettings from './bot';
 
+import Panel from 'ui/panel';
 import Button from 'ui/form/button';
 
 import styles from './css/dashboard.css';
@@ -103,15 +104,12 @@ export default class Dashboard extends React.Component {
 					if (this.state.loaded) {
 						return (
 							<div className={ styles.dashboard }>
-								<Header data={ this.state.data } />
+								<Header
+									data={ this.state.data }
+									saving={ this.state.saving }
+									onSave={ this.save }
+									/>
 								<BotSettings data={ this.state.data } />
-								<Button
-									block
-									className={ styles.saveButton }
-									onClick={ this.save }
-									disabled={ this.state.saving }>
-									Save
-								</Button>
 							</div>
 						);
 					}
@@ -148,9 +146,20 @@ class Header extends React.Component {
 	render() {
 		return (
 			<div className={ styles.header }>
-				<div className={ styles.headerTitles }>
-					<h2>RM-C Control Panel</h2>
-					<h1>{ this.props.data._bot.name }</h1>
+				<div className={ styles.headerContent }>
+					<div className={ styles.headerTitles }>
+						<h2>RM-C Control Panel</h2>
+						<h1>{ this.props.data._bot.name }</h1>
+					</div>
+					<div className={ styles.headerRight }>
+						<Button
+							className={ styles.saveButton }
+							onClick={ this.props.onSave }
+							disabled={ this.props.saving }
+							hollow dark>
+							Save
+						</Button>
+					</div>
 				</div>
 			</div>
 		);

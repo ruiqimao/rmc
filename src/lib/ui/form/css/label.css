@@ -1,0 +1,9 @@
+.label {
+	display:block;
+	font-family:Open Sans;
+	font-size:0.7rem;
+	font-weight:700;
+	text-transform:uppercase;
+	color:#777777;
+	user-select:none;
+}

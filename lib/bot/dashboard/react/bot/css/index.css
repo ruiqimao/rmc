@@ -1,0 +1,9 @@
+.commandCols:after {
+	content:'';
+	display:block;
+	clear:both;
+}
+
+.commandCol {
+	float:left;
+}

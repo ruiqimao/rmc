@@ -7,20 +7,17 @@ export default class Input extends React.Component {
 
 	render() {
 		const classes = classNames(
-			this.props.className,
 			styles.input,
-			{ [styles.centered]: this.props.centered }
+			{ [styles.centered]: this.props.centered },
+			this.props.className
 		);
 
 		return (
-			<span className={ classes }>
-				{ (() => {
-					if (this.props.label) return (
-							<label>{ this.props.label }</label>
-						);
-				})() }
-				<input value={ this.props.value } style={ this.props.style } onChange={ this.props.onChange } />
-			</span>
+			<input
+				className={ classes }
+				value={ this.props.value }
+				style={ this.props.style }
+				onChange={ this.props.onChange } />
 		);
 	}
 

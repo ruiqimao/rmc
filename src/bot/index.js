@@ -59,6 +59,9 @@ export default class Bot extends EventEmitter {
 			'errorOccurred',
 			'createModel'
 		];
+
+		// Bind functions.
+		this.handleCommand = this.handleCommand.bind(this);
 	}
 
 	/*
@@ -72,6 +75,7 @@ export default class Bot extends EventEmitter {
 
 			// Create models.
 			this.Prefix = this.createModel('command-prefix');
+			this.EnabledCommands = this.createModel('enabled-commands');
 
 			// Create a web server.
 			this.express = Express();
@@ -219,11 +223,13 @@ export default class Bot extends EventEmitter {
 	loadCommandCache() {
 		// Clear the command cache.
 		this.commands = {};
+		this.enabledCommands = {};
 
 		// Load all the commands and store them in the cache.
 		for (const plugin of this.plugins) {
 			for (const command of plugin.plugin.commands) {
 				this.commands[command.name] = command.command;
+				this.enabledCommands[command.name] = true;
 			}
 		}
 	}
@@ -280,9 +286,9 @@ export default class Bot extends EventEmitter {
 				const suffix = message.substring(command.length + prefix.length).trim();
 
 				// Handle the command.
-				this.handleCommand(msg, command, suffix);
+				yield this.handleCommand(msg, command, suffix);
 			}
-		}.bind(this)).catch((err) => console.error(err));
+		}.bind(this));
 	}
 
 	/*
@@ -298,7 +304,10 @@ export default class Bot extends EventEmitter {
 			'name': (this.client.servers.get('id', server).name),
 
 			// Command prefix.
-			'prefix': (yield this.Prefix.getEntry(server, this.config.COMMAND_PREFIX)).val()
+			'prefix': (yield this.Prefix.getEntry(server, this.config.COMMAND_PREFIX)).val(),
+
+			// Enabled commands.
+			'commands': (yield this.EnabledCommands.getEntry(server, this.enabledCommands)).val()
 		};
 	}
 
@@ -317,6 +326,13 @@ export default class Bot extends EventEmitter {
 			entry.val(data.prefix);
 			yield entry.save();
 		}
+
+		// Save the enabled commands.
+		{
+			const entry = yield this.EnabledCommands.getEntry(server, this.enabledCommands);
+			entry.val(data.commands);
+			yield entry.save();
+		}
 	}
 
 	/*
@@ -326,11 +342,14 @@ export default class Bot extends EventEmitter {
 	 * @param command The command.
 	 * @param suffix The command suffix.
 	 */
-	handleCommand(msg, command, suffix) {
+	*handleCommand(msg, command, suffix) {
+		// Get the list of enable commands.
+		const commands = (yield this.EnabledCommands.getEntry(msg.server.id, this.enabledCommands)).val();
+
 		// Check if the command is valid.
-		if (command in this.commands) {
+		if (commands[command]) {
 			// Execute the command.
-			this.commands[command].run(msg, suffix);
+			yield this.commands[command].run(msg, suffix);
 		}
 	}
 

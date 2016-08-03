@@ -41,14 +41,26 @@
 	width:100%;
 	max-width:900px;
 	margin:auto;
+	padding-top:6rem;
 }
 
 .header {
-	background:#282b30;
-	height:5rem;
+	position:fixed;
+	width:100%;
+	max-width:900px;
+	top:0;
+	left:50%;
+	transform:translateX(-50%);
+	z-index:1;
+}
+
+.headerContent {
 	position:relative;
-	margin:1rem;
+	background:#393c41;
+	height:5rem;
 	border-radius:0.2rem;
+	border:1px solid #282b30;
+	margin:1rem;
 }
 
 .headerTitles {
@@ -77,8 +89,11 @@
 	line-height:1.4rem;
 }
 
-.saveButton {
-	margin:1rem;
+.headerRight {
+	position:absolute;
+	top:50%;
+	right:2rem;
+	transform:translateY(-50%);
 }
 
 @keyframes pulsate {

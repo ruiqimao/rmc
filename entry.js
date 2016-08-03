@@ -1,3 +1,6 @@
+// Set the production flag.
+global.IS_PRODUCTION = (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() === 'production');
+
 function useES6() {
 	// All of ES6 works, so just run straight from source.
 	require('./src').main();
@@ -5,7 +8,7 @@ function useES6() {
 
 function useES5() {
 	// Check whether this is a production environment.
-	if (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() === 'production') {
+	if (IS_PRODUCTION) {
 		// Production, so run the pre-transpiled code.
 		// Add the lib folder as a path for imports.
 		require('app-module-path').addPath(__dirname + '/lib/lib');

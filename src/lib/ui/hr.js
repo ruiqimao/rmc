@@ -7,8 +7,8 @@ export default class Hr extends React.Component {
 
 	render() {
 		const classes = classNames(
-			this.props.className,
-			styles.hr
+			styles.hr,
+			this.props.className
 		);
 
 		return (

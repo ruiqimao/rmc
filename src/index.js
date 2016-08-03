@@ -7,6 +7,15 @@ import Config from './bot/config';
 
 export function main() {
 
+	// Set the authorization according to the environment.
+	if (IS_PRODUCTION) {
+		Authorization.DISCORD_TOKEN = Authorization.DISCORD_PRD_TOKEN;
+		Authorization.MONGO_URI = Authorization.MONGO_PRD_URI;
+	} else {
+		Authorization.DISCORD_TOKEN = Authorization.DISCORD_DEV_TOKEN;
+		Authorization.MONGO_URI = Authorization.MONGO_DEV_URI;
+	}
+
 	// Validate the authorization file.
 	if (!Authorization.DISCORD_TOKEN) {
 		console.error('No token specified.');
