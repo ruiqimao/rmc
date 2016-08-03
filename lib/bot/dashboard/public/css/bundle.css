@@ -207,6 +207,18 @@
 ._button_1v0h9_1._hollow_1v0h9_25._light_1v0h9_39:hover {
 	border-bottom-color:#444444;
 }
+._label_1v02q_1 {
+	display:block;
+	font-family:Open Sans;
+	font-size:0.7rem;
+	font-weight:700;
+	text-transform:uppercase;
+	color:#777777;
+	-webkit-user-select:none;
+	   -moz-user-select:none;
+	    -ms-user-select:none;
+	        user-select:none;
+}
 ._input_1shbz_1 {
 	outline:none;
 	-webkit-appearance:none;
@@ -303,16 +315,4 @@
 }
 ._checkbox_35hit_1._disabled_35hit_15 ._label_35hit_59 {
 	color:#cccccc;
-}
-._label_1v02q_1 {
-	display:block;
-	font-family:Open Sans;
-	font-size:0.7rem;
-	font-weight:700;
-	text-transform:uppercase;
-	color:#777777;
-	-webkit-user-select:none;
-	   -moz-user-select:none;
-	    -ms-user-select:none;
-	        user-select:none;
 }

@@ -5,7 +5,7 @@
   "main": "entry.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src -d lib --copy-files && npm run build-gui",
+    "build": "rm -rf lib; babel src -d lib --copy-files && npm run build-gui",
     "build-gui": "NODE_ENV=production NODE_PATH=./lib/lib browserify -v --poll -t [ babelify ] -p [ css-modulesify --after autoprefixer -o lib/bot/dashboard/public/css/bundle.css ] -g uglifyify lib/bot/dashboard/react/index.js -o lib/bot/dashboard/public/js/bundle.js",
     "watch": "NODE_PATH=./src/lib watchify -v --poll -t [ babelify ] -p [ css-modulesify --after autoprefixer -o src/bot/dashboard/public/css/bundle.css ] -g uglifyify src/bot/dashboard/react/index.js -o src/bot/dashboard/public/js/bundle.js"
   },
