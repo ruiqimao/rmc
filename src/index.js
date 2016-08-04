@@ -38,13 +38,13 @@ export function main() {
 
 	// Catch all the messages from the bot.
 	bot.on('connected', () => {
-		console.log('RM-C is connected!');
+		console.log(bot.client.user.username + ' is connected!');
 	});
 	bot.on('ready', () => {
-		console.log('RM-C is ready to go!');
+		console.log(bot.client.user.username + ' is ready to go!');
 	});
 	bot.on('disconnected', (graceful) => {
-		console.log('RM-C is disconnected.');
+		console.log(bot.client.user.username + ' is disconnected.');
 
 		// If not graceful, exit with an error code.
 		if (!graceful) process.exit(1);
