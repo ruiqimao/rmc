@@ -1,25 +1,22 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import styles from './css/input.css';
+import ElasticTextarea from 'react-textarea-autosize';
 
-export default class Input extends React.Component {
+import styles from './css/textarea.css';
 
-	constructor(props) {
-		super(props);
-	}
+export default class Textarea extends React.Component {
 
 	render() {
+		const Tag = this.props.elastic ? ElasticTextarea : 'textarea';
+
 		const classes = classNames(
-			styles.input,
-			{
-				[styles.centered]: this.props.centered
-			},
+			styles.textarea,
 			this.props.className
 		);
 
 		return (
-			<input
+			<Tag
 				className={ classes }
 				style={ this.props.style }
 				value={ this.props.value }

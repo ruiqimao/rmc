@@ -73,11 +73,12 @@ export default class BotSettings extends React.Component {
 					centered
 					value={ data.prefix }
 					style={{
-						width: '2rem'
+						width: '3rem'
 					}}
 					onChange={ this.updatePrefix } />
 				<Space height='2' />
 				<Label>Enabled Commands</Label>
+				<Space height='1' />
 				<div className={ styles.commandCols }>
 					<Col w='6' className={ styles.commandCol }>{ commandsCol1 }</Col>
 					<Col w='6' className={ styles.commandCol }>{ commandsCol2 }</Col>

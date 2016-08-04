@@ -81,4 +81,44 @@ export default class Plugin {
 		this.commands = this.commands.filter((command) => command.name != name);
 	}
 
+	/*
+	 * Get the plugin data for a server.
+	 *
+	 * @param id The server id.
+	 *
+	 * @return The plugin data for the server.
+	 */
+	*_getData(id) {
+		const data = {};
+
+		// Get the plugin's own data.
+		if (this.getData) data._ = yield this.getData(id);
+
+		// Get data from all the commands.
+		for (const command of this.commands) {
+			if (command.command.getData) data[command.name] = yield command.command.getData(id);
+		}
+
+		// Return the data.
+		return data;
+	}
+
+	/*
+	 * Save data to the plugin for a server.
+	 *
+	 * @param id The server id.
+	 * @param data The data to save.
+	 */
+	*_saveData(id, data) {
+		// Save the plugin's own data.
+		if (this.getData && data._ !== undefined) yield this.setData(id, data._);
+
+		// Save data for all the commands.
+		for (const command of this.commands) {
+			if (command.command.saveData && data[command.name] !== undefined) {
+				yield command.command.saveData(id, data[command.name]);
+			}
+		}
+	}
+
 }

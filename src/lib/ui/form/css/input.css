@@ -5,9 +5,12 @@
 	font-size:0.9rem;
 	border:none;
 	border-radius:0;
-	padding:0.5rem 0.7rem;
+	padding:0.5rem 0;
+	box-sizing:border-box;
 	transition:0.05s;
 	box-shadow:0 1px 0 #dddddd, 0 2px 0 transparent;
+	background:#ffffff;
+	color:#444444;
 }
 
 .input:focus {

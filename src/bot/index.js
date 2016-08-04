@@ -74,8 +74,8 @@ export default class Bot extends EventEmitter {
 			console.log('Connected to database!');
 
 			// Create models.
-			this.Prefix = this.createModel('command-prefix');
-			this.EnabledCommands = this.createModel('enabled-commands');
+			this.Prefix = this.createModel('_bot-command-prefix');
+			this.EnabledCommands = this.createModel('_bot-enabled-commands');
 
 			// Create a web server.
 			this.express = Express();

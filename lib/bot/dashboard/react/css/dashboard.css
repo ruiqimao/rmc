@@ -8,6 +8,7 @@
 	opacity:0;
 	pointer-events:none;
 	transition:0.2s ease-out;
+	z-index:99999;
 }
 
 .loading.visible {
@@ -41,20 +42,9 @@
 	width:100%;
 	max-width:900px;
 	margin:auto;
-	padding-top:6rem;
 }
 
 .header {
-	position:fixed;
-	width:100%;
-	max-width:900px;
-	top:0;
-	left:50%;
-	transform:translateX(-50%);
-	z-index:1;
-}
-
-.headerContent {
 	position:relative;
 	background:#393c41;
 	height:5rem;
@@ -68,11 +58,11 @@
 	top:50%;
 	left:2rem;
 	transform:translateY(-50%);
+	right:6rem;
 }
 
 .header h2 {
 	margin:0;
-	margin-bottom:0.2rem;
 	color:rgba(255,255,255,0.7);
 	font-family:Open Sans;
 	font-size:0.9rem;
@@ -86,7 +76,10 @@
 	font-family:Open Sans;
 	font-size:1.4rem;
 	font-weight:600;
-	line-height:1.4rem;
+	overflow:hidden;
+	width:100%;
+	white-space:nowrap;
+	text-overflow:ellipsis;
 }
 
 .headerRight {

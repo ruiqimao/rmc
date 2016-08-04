@@ -25,6 +25,7 @@
     "react-dom": "^15.3.0",
     "react-dom-server": "0.0.5",
     "react-icons": "^2.2.1",
+    "react-textarea-autosize": "^4.0.4",
     "request": "^2.74.0",
     "request-promise": "^4.1.0",
     "youtube-dl": "^1.11.1"

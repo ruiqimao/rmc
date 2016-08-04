@@ -51,6 +51,11 @@ export default class extends Plugin {
 			// Get data from the bot.
 			data._bot = yield this.bot.getData(id);
 
+			// Get data from all plugins.
+			for (const plugin of this.bot.plugins) {
+				data[plugin.name] = yield plugin.plugin._getData(id);
+			}
+
 			// Respond with the data.
 			res.json(data);
 		}.bind(this)).catch(() => {
@@ -81,6 +86,11 @@ export default class extends Plugin {
 
 			// Save the bot data.
 			yield this.bot.saveData(id, data._bot);
+
+			// Save data to all plugins.
+			for (const plugin of this.bot.plugins) {
+				if (data[plugin.name]) yield plugin.plugin._saveData(id, data[plugin.name]);
+			}
 
 			res.end();
 		}.bind(this));

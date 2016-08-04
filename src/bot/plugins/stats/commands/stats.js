@@ -45,7 +45,7 @@ export default class Stats extends Command {
 				const user = this.client.users.get('id', c.get('author'));
 				const userDetails = msg.server.detailsOfUser(user);
 				const name = (userDetails.nick === null ? user.username : userDetails.nick);
-				return '`' + name + '`: ' + count + ' message' + (count == 1 ? '' : 's');
+				return '**@' + name + '**: ' + count + ' message' + (count == 1 ? '' : 's');
 			})
 			.join('\n');
 		this.client.sendMessage(msg, topMessages);

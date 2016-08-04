@@ -14,3 +14,7 @@
 .col10 { width: 83.33%; }
 .col11 { width: 91.66%; }
 .col12 { width: 100%; }
+
+@media (max-width: 768px) {
+	.col { width: 100%; }
+}
