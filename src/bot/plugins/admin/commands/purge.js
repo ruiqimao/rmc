@@ -29,7 +29,7 @@ export default class Purge extends Command {
 			yield this.client.sendMessage(msg, 'Alright, I\'m deleting ' + number + ' message' + numberSuffix + '!');
 
 			// Get the message logs.
-			const messages = yield this.client.getChannelLogs(msg, number);
+			const messages = yield this.client.getChannelLogs(msg, number + 4); // +4 for the 4 extra messages.
 
 			// Delete them all!
 			this.client.deleteMessages(messages);
