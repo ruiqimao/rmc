@@ -52,7 +52,7 @@ export default class extends Plugin {
 
 	*getData(id) {
 		// Get the server.
-		const server = this.client.servers.get(id);
+		const server = this.client.servers.get('id', id);
 
 		// Get all the users from the server.
 		const users = server.members;
