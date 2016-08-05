@@ -1,0 +1,36 @@
+.sidebar {
+	position:absolute;
+	top:0;
+	left:0;
+	bottom:0;
+	width:250px;
+	background:#393c41;
+	border-left:2px solid #222222;
+	box-sizing:border-box;
+}
+
+.serverName {
+	margin:0;
+	color:#fcfcfc;
+	font-family:Hind;
+	font-size:1rem;
+	line-height:4.2rem;
+	height:4rem;
+	font-weight:500;
+	overflow:hidden;
+	width:100%;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	padding:0 1.4rem;
+	box-sizing:border-box;
+	background:rgba(0,0,0,0.1);
+	border-bottom:2px solid rgba(0,0,0,0.2);
+}
+
+.uis {
+	position:absolute;
+	top:5rem;
+	left:0;
+	right:0;
+	bottom:0;
+}

@@ -179,7 +179,7 @@ export default class Bot extends EventEmitter {
 			});
 
 			// Rebuild the cache of commands.
-			this.loadCommandCache();
+			yield this.loadCommandCache();
 		}.bind(this));
 	}
 
@@ -213,14 +213,14 @@ export default class Bot extends EventEmitter {
 			this.plugins.splice(index, 1);
 
 			// Rebuild the command cache.
-			this.loadCommandCache();
+			yield this.loadCommandCache();
 		}.bind(this));
 	}
 
 	/*
 	 * Build a cache of all commands.
 	 */
-	loadCommandCache() {
+	*loadCommandCache() {
 		// Clear the command cache.
 		this.commands = {};
 		this.enabledCommands = {};
@@ -299,6 +299,20 @@ export default class Bot extends EventEmitter {
 	 * @return The relevant information.
 	 */
 	*getData(server) {
+		// Get the saved enabled commands and the full list of commands.
+		const entry = yield this.EnabledCommands.getEntry(server, this.enabledCommands);
+		const savedCommands = entry.val();
+		const commands = this.enabledCommands;
+
+		// Make corrections.
+		for (const command in savedCommands) {
+			if (commands[command] !== undefined && !savedCommands[command]) commands[command] = false;
+		}
+
+		// Save the corrected command list.
+		entry.val(commands);
+		yield entry.save();
+
 		return {
 			// Server name.
 			'name': (this.client.servers.get('id', server).name),
@@ -307,7 +321,7 @@ export default class Bot extends EventEmitter {
 			'prefix': (yield this.Prefix.getEntry(server, this.config.COMMAND_PREFIX)).val(),
 
 			// Enabled commands.
-			'commands': (yield this.EnabledCommands.getEntry(server, this.enabledCommands)).val()
+			'commands': commands
 		};
 	}
 

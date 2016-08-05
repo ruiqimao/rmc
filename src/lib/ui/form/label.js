@@ -12,7 +12,9 @@ export default class Label extends React.Component {
 		);
 
 		return (
-			<label className={ classes }>
+			<label
+				className={ classes }
+				style={ this.props.style } >
 				{ this.props.children }
 			</label>
 		);

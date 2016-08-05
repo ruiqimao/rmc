@@ -50,4 +50,45 @@ export default class extends Plugin {
 		yield count.save();
 	}
 
+	*getData(id) {
+		// Get the server.
+		const server = this.client.servers.get(id);
+
+		// Get all the users from the server.
+		const users = server.members;
+
+		// Get all message counts.
+		const messageCounts = yield this.MessageCount.find({
+			'server': id
+		});
+		const counts = {};
+		for (const count of messageCounts) {
+			counts[count.get('author')] = count.get('count');
+		}
+
+		// Create a list of results.
+		const results = [];
+
+		// Iterate through all the users.
+		for (const user of users) {
+			const details = server.detailsOfUser(user);
+			const result = {
+				id: user.id,
+				username: user.username,
+				nick: details.nick,
+				avatar: user.avatarURL,
+				messages: 0,
+				bot: user.bot
+			};
+
+			if (counts[user.id] !== undefined) result.messages = counts[user.id];
+
+			// Add to the results.
+			results.push(result);
+		}
+
+		// Return the sorted results (by message count).
+		return results.sort((a, b) => b.messages - a.messages);
+	}
+
 }

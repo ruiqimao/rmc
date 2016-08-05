@@ -1,0 +1,24 @@
+.text {
+	font-family:Open Sans;
+	font-size:1rem;
+	font-weight:400;
+	color:#444444;
+	user-select:none;
+}
+
+.text.bold {
+	font-weight:600;
+}
+
+.text.italic {
+	font-style:italic;
+}
+
+.text.centered {
+	display:inline-block;
+	text-align:center;
+}
+
+.text.selectable {
+	user-select:text;
+}

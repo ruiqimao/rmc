@@ -20,6 +20,7 @@ export default class Button extends React.Component {
 		return (
 			<button
 				className={ classes }
+				style={ this.props.style }
 				disabled={ this.props.disabled }
 				onClick={ this.props.onClick } >
 				{ this.props.children }

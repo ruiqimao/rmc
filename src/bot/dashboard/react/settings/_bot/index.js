@@ -1,8 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import Panel from 'ui/panel';
-
 import Label from 'ui/form/label';
 import Input from 'ui/form/input';
 import Space from 'ui/form/space';
@@ -66,7 +64,7 @@ export default class BotSettings extends React.Component {
 		})
 
 		return (
-			<Panel title='Bot Settings'>
+			<div>
 				<Label>Command Prefix</Label>
 				<Space height='0.5' />
 				<Input
@@ -83,7 +81,7 @@ export default class BotSettings extends React.Component {
 					<Col w='6' className={ styles.commandCol }>{ commandsCol1 }</Col>
 					<Col w='6' className={ styles.commandCol }>{ commandsCol2 }</Col>
 				</div>
-			</Panel>
+			</div>
 		);
 	}
 

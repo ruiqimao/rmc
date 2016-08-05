@@ -1,0 +1,47 @@
+.users {
+	position:absolute;
+	left:1rem;
+	top:4rem;
+	bottom:2rem;
+	width:200px;
+	border-right:1px solid #f0f0f0;
+	box-sizing:border-box;
+}
+
+.details {
+	position:absolute;
+	left:calc(1rem + 200px);
+	top:4rem;
+	bottom:2rem;
+	right:1rem;
+}
+
+.detailsContent {
+	padding-left:1rem;
+	padding-right:1rem;
+}
+
+.detailsUsername {
+	padding:0;
+	margin:0;
+	font-family:Open Sans;
+	font-size:1rem;
+	font-weight:600;
+	color:#666666;
+	margin-bottom:1rem;
+	margin-top:0.1rem;
+}
+
+.detailsBot {
+	display:inline-block;
+	color:#ffffff;
+	background:#2980b9;
+	font-size:0.8rem;
+	font-weight:400;
+	text-transform:uppercase;
+	padding:0.2rem 0.4rem;
+	border-radius:0.2rem;
+	margin-left:1rem;
+	position:relative;
+	top:-0.05rem;
+}

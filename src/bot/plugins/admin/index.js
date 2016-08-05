@@ -58,7 +58,8 @@ export default class extends Plugin {
 
 			// Respond with the data.
 			res.json(data);
-		}.bind(this)).catch(() => {
+		}.bind(this)).catch((err) => {
+			console.error(err);
 			res.status(500).end();
 		});
 	}

@@ -12,7 +12,9 @@ export default class Panel extends React.Component {
 		);
 
 		return (
-			<div className={ classes }>
+			<div
+				className={ classes }
+				style={ this.props.style } >
 				{ (() => {
 					if (this.props.title) return (
 						<div className={ styles.panelTitle }>

@@ -111,7 +111,7 @@ export default class Plugin {
 	 */
 	*_saveData(id, data) {
 		// Save the plugin's own data.
-		if (this.getData && data._ !== undefined) yield this.setData(id, data._);
+		if (this.saveData && data._ !== undefined) yield this.saveData(id, data._);
 
 		// Save data for all the commands.
 		for (const command of this.commands) {

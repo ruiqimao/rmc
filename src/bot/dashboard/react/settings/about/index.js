@@ -1,16 +1,13 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import Panel from 'ui/panel';
-
 import Label from 'ui/form/label';
-import Input from 'ui/form/input';
 import Textarea from 'ui/form/textarea';
 import Space from 'ui/form/space';
 
 import styles from './css/index.css';
 
-export default class BotSettings extends React.Component {
+export default class AboutSettings extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -35,15 +32,17 @@ export default class BotSettings extends React.Component {
 		const data = this.props.data.about;
 
 		return (
-			<Panel title='About'>
+			<div>
 				<Label>About Text</Label>
 				<Space height='1' />
 				<Textarea
 					elastic
-					style={{ minHeight: '10rem' }}
+					style={{
+						minHeight: '10rem'
+					}}
 					value={ data.about }
 					onChange={ this.updateText } />
-			</Panel>
+			</div>
 		);
 	}
 

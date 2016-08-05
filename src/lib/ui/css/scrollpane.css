@@ -1,0 +1,24 @@
+.scrollpane .trackHorizontal {
+	height:8px !important;
+	left:2px;
+	right:2px;
+	bottom:2px;
+}
+
+.scrollpane .trackVertical {
+	width:8px !important;
+	right:2px;
+	top:2px;
+	bottom:2px;
+}
+
+.scrollpane .thumbVertical,
+.scrollpane .thumbHorizontal {
+	background:rgba(0,0,0,0.3);
+	border-radius:4px;
+}
+
+.scrollpane .thumbVertical:hover,
+.scrollpane .thumbHorizontal:hover {
+	background:rgba(0,0,0,0.4);
+}

@@ -26,7 +26,9 @@ export default class Checkbox extends React.Component {
 		);
 
 		return (
-			<span className={ classes }>
+			<span
+				className={ classes }
+				style={ this.props.style } >
 				<input
 					id={ this.state.id }
 					checked={ this.props.checked }

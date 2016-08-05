@@ -22,6 +22,7 @@
     "hogan-express": "^0.5.2",
     "mongorito": "^2.1.2",
     "react": "^15.3.0",
+    "react-custom-scrollbars": "^4.0.0",
     "react-dom": "^15.3.0",
     "react-dom-server": "0.0.5",
     "react-icons": "^2.2.1",
