@@ -57,7 +57,8 @@ export default class Bot extends EventEmitter {
 			'getVoiceConnection',
 			'permissionDenied',
 			'errorOccurred',
-			'createModel'
+			'createModel',
+			'getUserFromMention'
 		];
 
 		// Bind functions.
@@ -152,7 +153,31 @@ export default class Bot extends EventEmitter {
 					console.error(err);
 				});
 			}
+
+			// Fix the commands lists.
+			yield this.fixCommandsLists();
 		}.bind(this));
+	}
+
+	/*
+	 * Fix all the commands lists.
+	 */
+	*fixCommandsLists() {
+		for (const server of this.client.servers) {
+			// Get the saved enabled commands and the full list of commands.
+			const entry = yield this.EnabledCommands.getEntry(server.id, this.enabledCommands);
+			const savedCommands = entry.val();
+			const commands = this.enabledCommands;
+
+			// Make corrections.
+			for (const command in savedCommands) {
+				if (commands[command] !== undefined && !savedCommands[command]) commands[command] = false;
+			}
+
+			// Save the corrected command list.
+			entry.val(commands);
+			yield entry.save();
+		}
 	}
 
 	/*
@@ -299,20 +324,6 @@ export default class Bot extends EventEmitter {
 	 * @return The relevant information.
 	 */
 	*getData(server) {
-		// Get the saved enabled commands and the full list of commands.
-		const entry = yield this.EnabledCommands.getEntry(server, this.enabledCommands);
-		const savedCommands = entry.val();
-		const commands = this.enabledCommands;
-
-		// Make corrections.
-		for (const command in savedCommands) {
-			if (commands[command] !== undefined && !savedCommands[command]) commands[command] = false;
-		}
-
-		// Save the corrected command list.
-		entry.val(commands);
-		yield entry.save();
-
 		return {
 			// Server name.
 			'name': (this.client.servers.get('id', server).name),
@@ -455,6 +466,23 @@ export default class Bot extends EventEmitter {
 				return this.get('value');
 			}
 		};
+	}
+
+	/*
+	 * Get a user from a mention.
+	 *
+	 * @param mention The mention.
+	 *
+	 * @return The user. null if the user is not found.
+	 */
+	getUserFromMention(mention) {
+		// Get the id from the mention.
+		const matches = (/([1-9]+)/).exec(mention);
+		if (matches[1] === undefined) return null;
+		const id = matches[1];
+
+		// Return the user.
+		return this.client.users.get('id', id);
 	}
 
 }

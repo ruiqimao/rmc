@@ -1,6 +1,7 @@
 import { Plugin } from 'plugin';
 
 import Stats from './commands/stats';
+import Profile from './commands/profile';
 
 import co from 'co';
 
@@ -8,6 +9,7 @@ export default class extends Plugin {
 
 	*init() {
 		this.addCommand('stats', Stats);
+		this.addCommand('profile', Profile);
 
 		// Create a class for message counts.
 		this.MessageCount = this.createModel('messagecount');

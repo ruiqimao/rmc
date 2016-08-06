@@ -31,7 +31,7 @@ export default class Pet extends Command {
 
 		// Respond with the count.
 		let countString = count.val() + ' time';
-		if (this.pets > 1) countString += 's';
+		if (count.val() > 1) countString += 's';
 		yield this.client.sendMessage(msg, '*~kya~*, I\'ve been petted ' + countString + '.');
 
 		// Send a random response.
