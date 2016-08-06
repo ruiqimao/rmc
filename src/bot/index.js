@@ -477,7 +477,7 @@ export default class Bot extends EventEmitter {
 	 */
 	getUserFromMention(mention) {
 		// Get the id from the mention.
-		const matches = (/([1-9]+)/).exec(mention);
+		const matches = (/([0-9]+)/).exec(mention);
 		if (matches[1] === undefined) return null;
 		const id = matches[1];
 

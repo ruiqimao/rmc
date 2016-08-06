@@ -37,12 +37,14 @@ export default class Profile extends Command {
 		if (entries[0]) count = entries[0].get('count');
 
 		// Construct the response.
-		let response = '**@' + (details.nick || user.username) + ':**\n';
+		let response = '**@' + (details.nick || user.username) + '**';
+		if (user.bot) response += ' (Bot)';
+		response += ':\n';
 		response += 'ID: ' + user.id + '\n';
 		response += 'Username: ' + user.username + '\n';
 		if (details.nick) response += 'Nickname: ' + details.nick + '\n';
 		response += 'Avatar: ' + user.avatarURL + '\n';
-		response += 'Roles: ' + details.roles.map(role => role.name).join(', ') + '\n',
+		if (details.roles) response += 'Roles: ' + details.roles.map(role => role.name).join(', ') + '\n',
 		response += 'Messages: ' + count;
 
 		// Respond.
