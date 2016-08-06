@@ -24,7 +24,7 @@ export default class Text extends React.Component {
 		return (
 			<span
 				className={ classes }
-				style={ this.props.style } >
+				style={ this.props.style }>
 				{ this.props.children }
 			</span>
 		);

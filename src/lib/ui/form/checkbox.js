@@ -28,17 +28,20 @@ export default class Checkbox extends React.Component {
 		return (
 			<span
 				className={ classes }
-				style={ this.props.style } >
+				style={ this.props.style }>
 				<input
 					id={ this.state.id }
 					checked={ this.props.checked }
 					disabled={ this.props.disabled }
 					type='checkbox'
-					onChange={ this.props.onChange } />
+					onChange={ this.props.onChange }/>
 				<label htmlFor={ this.state.id }  className={ styles.boxOuter }>
-					<Checkmark className={ styles.boxInner } />
+					<Checkmark className={ styles.boxInner }/>
 				</label>
-				{ this.props.label && <label htmlFor={ this.state.id } className={ styles.label }>{ this.props.label }</label> }
+				{ this.props.label &&
+					<label htmlFor={ this.state.id } className={ styles.label }>
+						{ this.props.label }
+					</label> }
 			</span>
 		);
 	}

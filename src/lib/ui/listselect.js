@@ -25,7 +25,7 @@ export default class ListSelect extends React.Component {
 		return (
 			<div
 				className={ classes }
-				style={ this.props.style } >
+				style={ this.props.style }>
 				{ this.props.values.map((value, index) => {
 					const classes = classNames(
 						styles.entry,
@@ -36,7 +36,7 @@ export default class ListSelect extends React.Component {
 						<div
 							className={ classes }
 							key={ index }
-							onClick={ this.onChange.bind(this, index) } >
+							onClick={ this.onChange.bind(this, index) }>
 							{ value }
 						</div>
 					);

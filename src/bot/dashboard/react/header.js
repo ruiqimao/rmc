@@ -12,11 +12,11 @@ export default class Header extends React.Component {
 		const selected = this.props.selected;
 
 		return (
-			<div className={ styles.header } >
-				<h1 className={ styles.title } >
+			<div className={ styles.header }>
+				<h1 className={ styles.title }>
 					{ uis[selected].name }
 				</h1>
-				<div className={ styles.headerRight } >
+				<div className={ styles.headerRight }>
 					<Button
 						className={ styles.saveButton }
 						onClick={ this.props.onSave }

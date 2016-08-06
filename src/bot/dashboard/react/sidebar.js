@@ -36,7 +36,7 @@ export default class Sidebar extends React.Component {
 						dark
 						values={ names }
 						selected={ selected }
-						onChange={ this.onChange } />
+						onChange={ this.onChange }/>
 				</ScrollPane>
 			</div>
 		);

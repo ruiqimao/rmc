@@ -53,7 +53,12 @@ export default class Util {
 		// If the channel is private, all permissions are granted.
 		if (!server) return true;
 
-		// Get whether the user has the role.
+		// Check if the role is a resolvable that matches.
+		try {
+			if (user.hasRole(role)) return true;
+		} catch (e) { }
+
+		// Get whether the user has a role with the given name.
 		return server.rolesOfUser(user).reduce((p, c, i) => p || c.name == role, false);
 	}
 

@@ -37,10 +37,10 @@ export default class StatsSettings extends React.Component {
 		const entry = data._[state.selected];
 
 		return (
-			<div className={ styles.details } key={ entry.id } >
+			<div className={ styles.details } key={ entry.id }>
 				<ScrollPane>
-					<div className={ styles.detailsContent } >
-						<h1 className={ styles.detailsUsername } >
+					<div className={ styles.detailsContent }>
+						<h1 className={ styles.detailsUsername }>
 							{ entry.nick || entry.username }
 							{ entry.bot && (
 								<div className={ styles.detailsBot }>Bot</div>
@@ -66,7 +66,7 @@ export default class StatsSettings extends React.Component {
 							<div>
 								<Label>Avatar</Label>
 								<Space height='0.5' />
-								<img src={ entry.avatar } style={{ height: '8rem', borderRadius: '0.2rem' }} />
+								<img src={ entry.avatar } style={{ height: '8rem', borderRadius: '0.2rem' }}/>
 								<Space height='2' />
 							</div>
 						) }
@@ -92,7 +92,7 @@ export default class StatsSettings extends React.Component {
 							light
 							values={ data._.map(entry => (entry.nick || entry.username)) }
 							selected={ state.selected }
-							onChange={ this.onSelectChange } />
+							onChange={ this.onSelectChange }/>
 					</ScrollPane>
 				</div>
 				{ this.renderDetails() }

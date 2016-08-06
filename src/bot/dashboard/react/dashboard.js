@@ -202,7 +202,7 @@ export default class Dashboard extends React.Component {
 
 		return (
 			<div>
-				<Loading visible={ !this.state.loaded } />
+				<Loading visible={ !this.state.loaded }/>
 				{(() => {
 					if (this.state.loaded) {
 						// Get the UI to show.
@@ -210,22 +210,22 @@ export default class Dashboard extends React.Component {
 						const UIstate = this.state.uis[currentUI].state;
 
 						return (
-							<div className={ styles.dashboard } >
+							<div className={ styles.dashboard }>
 								<Sidebar
 									data={ data }
 									selected={ currentUI }
 									names={ this.state.uis.map(ui => ui.name) }
-									onChange={ this.changeUI } />
+									onChange={ this.changeUI }/>
 								<Header
 									selected={ currentUI }
 									uis={ this.state.uis }
 									onSave={ this.save }
 									saving={ this.state.saving }
-									saved={ this.state.saved } />
-								<div className={ styles.content } >
+									saved={ this.state.saved }/>
+								<div className={ styles.content }>
 									<ScrollPane>
 										<div className={ styles.ui }>
-											<UI data={ data } state={ UIstate } />
+											<UI data={ data } state={ UIstate }/>
 										</div>
 									</ScrollPane>
 								</div>

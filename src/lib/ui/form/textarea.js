@@ -20,7 +20,7 @@ export default class Textarea extends React.Component {
 				className={ classes }
 				style={ this.props.style }
 				value={ this.props.value }
-				onChange={ this.props.onChange } />
+				onChange={ this.props.onChange }/>
 		);
 	}
 

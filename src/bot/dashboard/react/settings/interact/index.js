@@ -88,14 +88,14 @@ export default class InteractSettings extends React.Component {
 				<Textarea
 					elastic
 					value={ data.pet.responses.join("\n") }
-					onChange={ this.onPetResponsesChange } />
+					onChange={ this.onPetResponsesChange }/>
 				<Space height='2' />
 				<Label>Slap Responses (One per Line)</Label>
 				<Space height='1' />
 				<Textarea
 					elastic
 					value={ data.slap.join("\n") }
-					onChange={ this.onSlapResponsesChange } />
+					onChange={ this.onSlapResponsesChange }/>
 			</div>
 		);
 	}

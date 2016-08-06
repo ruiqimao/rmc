@@ -41,7 +41,7 @@ export default class AboutSettings extends React.Component {
 						minHeight: '10rem'
 					}}
 					value={ data.about }
-					onChange={ this.updateText } />
+					onChange={ this.updateText }/>
 			</div>
 		);
 	}

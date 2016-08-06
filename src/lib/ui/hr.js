@@ -14,7 +14,7 @@ export default class Hr extends React.Component {
 		return (
 			<hr
 				className={ classes }
-				style={ this.props.style } />
+				style={ this.props.style }/>
 		);
 	}
 

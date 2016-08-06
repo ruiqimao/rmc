@@ -23,7 +23,7 @@ export default class Input extends React.Component {
 				className={ classes }
 				style={ this.props.style }
 				value={ this.props.value }
-				onChange={ this.props.onChange } />
+				onChange={ this.props.onChange }/>
 		);
 	}
 

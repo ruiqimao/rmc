@@ -9,7 +9,8 @@ export default class ClearDef extends Command {
 		// Cannot be private.
 		if (msg.channel.isPrivate) return false;
 
-		return Util.checkRole(msg.server, msg.author, this.config.COMMANDER); // Must be a commander.
+		const commander = (yield this.bot.Commander.getEntry(msg.server.id, '')).val();
+		return Util.checkRole(msg.server, msg.author, commander); // Must be a commander.
 	}
 
 	*process(msg, suffix) {

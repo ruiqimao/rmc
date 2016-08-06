@@ -15,14 +15,14 @@ export default class ScrollPane extends React.Component {
 
 		return (
 			<Scrollbars
-				renderTrackHorizontal={ props => <div { ...props } className={ styles.trackHorizontal } /> }
-				renderTrackVertical={ props => <div { ...props } className={ styles.trackVertical } /> }
-				renderThumbHorizontal={ props => <div { ...props } className={ styles.thumbHorizontal } /> }
-				renderThumbVertical={ props => <div { ...props } className={ styles.thumbVertical } /> }
-				renderView={ props => <div { ...props } className={ styles.view } /> }
+				renderTrackHorizontal={ props => <div { ...props } className={ styles.trackHorizontal }/> }
+				renderTrackVertical={ props => <div { ...props } className={ styles.trackVertical }/> }
+				renderThumbHorizontal={ props => <div { ...props } className={ styles.thumbHorizontal }/> }
+				renderThumbVertical={ props => <div { ...props } className={ styles.thumbVertical }/> }
+				renderView={ props => <div { ...props } className={ styles.view }/> }
 				autoHide={ this.props.autoHide }
 				className={ classes }
-				style={ this.props.style } >
+				style={ this.props.style }>
 				{ this.props.children }
 			</Scrollbars>
 		);

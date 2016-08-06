@@ -57,11 +57,11 @@ export default class DeleteButton extends React.Component {
 				className={ classes }
 				style={ this.props.style }
 				onClick={ this.onClick }
-				disabled={ this.props.disabled } >
-				<div className={ styles.icon } >
-					<Trashcan className={ styles.trashcan } />
+				disabled={ this.props.disabled }>
+				<div className={ styles.icon }>
+					<Trashcan className={ styles.trashcan }/>
 				</div>
-				<div className={ styles.label } >
+				<div className={ styles.label }>
 					{ this.props.label }
 				</div>
 			</button>

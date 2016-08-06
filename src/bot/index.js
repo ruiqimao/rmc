@@ -76,6 +76,7 @@ export default class Bot extends EventEmitter {
 
 			// Create models.
 			this.Prefix = this.createModel('_bot-command-prefix');
+			this.Commander = this.createModel('_bot-commander');
 			this.EnabledCommands = this.createModel('_bot-enabled-commands');
 
 			// Create a web server.
@@ -324,15 +325,30 @@ export default class Bot extends EventEmitter {
 	 * @return The relevant information.
 	 */
 	*getData(server) {
+		// Get the roles.
+		const roles = this.client.servers.get('id', server).roles.map(role => {
+			return {
+				id: role.id,
+				name: role.name,
+				color: role.colorAsHex()
+			};
+		});
+
 		return {
 			// Server name.
 			'name': (this.client.servers.get('id', server).name),
 
+			// Server roles.
+			'roles': roles,
+
 			// Command prefix.
 			'prefix': (yield this.Prefix.getEntry(server, this.config.COMMAND_PREFIX)).val(),
 
+			// Commander.
+			'commander': (yield this.Commander.getEntry(server, '')).val(),
+
 			// Enabled commands.
-			'commands': commands
+			'commands': (yield this.EnabledCommands.getEntry(server, this.enableCommands)).val()
 		};
 	}
 
@@ -349,6 +365,13 @@ export default class Bot extends EventEmitter {
 		if (data.prefix.length > 0 && data.prefix.length < 4) {
 			const entry = yield this.Prefix.getEntry(server, this.config.COMMAND_PREFIX);
 			entry.val(data.prefix);
+			yield entry.save();
+		}
+
+		// Save the commander.
+		{
+			const entry = yield this.Commander.getEntry(server, '');
+			entry.val(data.commander);
 			yield entry.save();
 		}
 

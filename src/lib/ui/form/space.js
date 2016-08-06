@@ -15,7 +15,7 @@ export default class Space extends React.Component {
 					display: (this.props.width ? 'inline-block' : 'block'),
 					width: (this.props.width ? this.props.width : 1) + 'rem',
 					height: (this.props.height ? this.props.height : 1) + 'rem'
-				}} ></div>
+				}}></div>
 		);
 	}
 

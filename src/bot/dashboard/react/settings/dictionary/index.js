@@ -77,10 +77,10 @@ export default class DictionarySettings extends React.Component {
 		const entry = data._[state.selected];
 
 		return (
-			<div className={ styles.definition } key={ entry.phrase } >
+			<div className={ styles.definition } key={ entry.phrase }>
 				<ScrollPane>
-					<div className={ styles.definitionContent } >
-						<h1 className={ styles.definitionPhrase } >
+					<div className={ styles.definitionContent }>
+						<h1 className={ styles.definitionPhrase }>
 							{ entry.phrase }
 						</h1>
 						<Label>Definition</Label>
@@ -91,12 +91,12 @@ export default class DictionarySettings extends React.Component {
 							style={{
 								minHeight: '5rem'
 							}}
-							onChange={ this.onDefinitionChange } />
+							onChange={ this.onDefinitionChange }/>
 						<Space height='2' />
 						<DeleteButton
 							light
 							label='Delete Definition'
-							onDelete={ this.onDelete } />
+							onDelete={ this.onDelete }/>
 					</div>
 				</ScrollPane>
 			</div>
@@ -117,7 +117,7 @@ export default class DictionarySettings extends React.Component {
 							light
 							values={ data._.map(entry => entry.phrase) }
 							selected={ state.selected }
-							onChange={ this.onSelectChange } />
+							onChange={ this.onSelectChange }/>
 					</ScrollPane>
 				</div>
 				{ this.renderDefinition() }

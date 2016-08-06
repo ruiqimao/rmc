@@ -17,7 +17,7 @@ export default class Col extends React.Component {
 		return (
 			<div
 				className={ classes }
-				style={ this.props.style } >
+				style={ this.props.style }>
 				{ this.props.children }
 			</div>
 		);
