@@ -84,7 +84,7 @@ export default class BotSettings extends React.Component {
 			}
 		});
 
-		// Generate the list of roles to display in the dropdown and the commander role index..
+		// Generate the list of roles to display in the dropdown and the commander role index.
 		let roles = [];
 		let commander = 0;
 		data.roles.map((role, index) => {

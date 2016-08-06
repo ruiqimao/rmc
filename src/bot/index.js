@@ -348,7 +348,7 @@ export default class Bot extends EventEmitter {
 			'commander': (yield this.Commander.getEntry(server, '')).val(),
 
 			// Enabled commands.
-			'commands': (yield this.EnabledCommands.getEntry(server, this.enableCommands)).val()
+			'commands': (yield this.EnabledCommands.getEntry(server, this.enabledCommands)).val()
 		};
 	}
 
