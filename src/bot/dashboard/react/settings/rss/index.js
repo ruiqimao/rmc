@@ -95,6 +95,9 @@ export default class RSSSettings extends React.Component {
 		if (refresh.length == 0) refresh = 0;
 		refresh = parseInt(refresh);
 
+		// Must be greater than 1.
+		if (refresh <= 0) return;
+
 		// Change the feed URL.
 		const data = this.props.data.rss;
 		const state = this.props.state;

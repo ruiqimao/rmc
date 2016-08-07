@@ -67,7 +67,7 @@ export default class extends Plugin {
 				// Set the properties.
 				entry.set('feed', updated.feed);
 				entry.set('channel', updated.channel);
-				entry.set('refresh', updated.refresh);
+				entry.set('refresh', Math.max(1, updated.refresh));
 				yield entry.save();
 
 				// Restart the feed.
