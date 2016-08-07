@@ -42,8 +42,16 @@ export default class extends Plugin {
 			if (dashboards.length == 0) {
 				// If there is no valid id, 404.
 				res.status(404).end();
+				return;
 			}
 			const id = dashboards[0].get('server');
+
+			// Make sure the server exists.
+			if (this.client.servers.get('id', id) == null) {
+				yield dashboards[0].remove();
+				res.status(404).end();
+				return;
+			}
 
 			// Compile the data.
 			const data = {};

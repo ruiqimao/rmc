@@ -397,6 +397,18 @@
 ._src_lib_ui_form_css_button__button._src_lib_ui_form_css_button__hollow._src_lib_ui_form_css_button__light:hover {
 	border-bottom-color:#2980b9;
 }
+._src_lib_ui_form_css_label__label {
+	display:block;
+	font-family:Open Sans;
+	font-size:0.7rem;
+	font-weight:700;
+	text-transform:uppercase;
+	color:#777777;
+	-webkit-user-select:none;
+	   -moz-user-select:none;
+	    -ms-user-select:none;
+	        user-select:none;
+}
 ._src_lib_ui_form_css_checkbox__checkbox {
 	margin:1rem 0;
 	display:block;
@@ -570,18 +582,6 @@
 ._src_lib_ui_form_css_input__input._src_lib_ui_form_css_input__centered {
 	text-align:center;
 }
-._src_lib_ui_form_css_label__label {
-	display:block;
-	font-family:Open Sans;
-	font-size:0.7rem;
-	font-weight:700;
-	text-transform:uppercase;
-	color:#777777;
-	-webkit-user-select:none;
-	   -moz-user-select:none;
-	    -ms-user-select:none;
-	        user-select:none;
-}
 ._src_lib_ui_form_css_textarea__textarea {
 	width:100%;
 	padding:0.5rem 0.8rem;
@@ -604,7 +604,6 @@
 	        appearance:none;
 	outline:none;
 	border:none;
-	width:2.5rem;
 	height:2.5rem;
 	padding:0;
 	margin:0;
@@ -614,10 +613,6 @@
 	transition:0.2s;
 	border-radius:0.2rem;
 	overflow:hidden;
-}
-
-._src_lib_ui_form_css_deletebutton__deletebutton._src_lib_ui_form_css_deletebutton__expanded {
-	width:auto;
 }
 
 ._src_lib_ui_form_css_deletebutton__deletebutton:hover, ._src_lib_ui_form_css_deletebutton__deletebutton._src_lib_ui_form_css_deletebutton__expanded {
@@ -705,4 +700,26 @@
 	   -moz-user-select:text;
 	    -ms-user-select:text;
 	        user-select:text;
+}
+._src_bot_dashboard_react_settings_rss_css_index__feeds {
+	position:absolute;
+	left:1rem;
+	top:4rem;
+	bottom:2rem;
+	width:200px;
+	border-right:1px solid #f0f0f0;
+	box-sizing:border-box;
+}
+
+._src_bot_dashboard_react_settings_rss_css_index__details {
+	position:absolute;
+	left:calc(1rem + 200px);
+	top:4rem;
+	bottom:2rem;
+	right:1rem;
+}
+
+._src_bot_dashboard_react_settings_rss_css_index__detailsContent {
+	padding-left:1rem;
+	padding-right:1rem;
 }

@@ -48,6 +48,7 @@ export function main() {
 
 		// If not graceful, exit with an error code.
 		if (!graceful) process.exit(1);
+		else process.exit(0);
 	});
 
 	// Capture SIGINT and SIGTERM.

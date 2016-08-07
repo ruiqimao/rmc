@@ -17,6 +17,7 @@ export default {
 		'voice',
 		'music',
 		'dictionary',
-		'stats'
+		'stats',
+		'rss'
 	]
 }

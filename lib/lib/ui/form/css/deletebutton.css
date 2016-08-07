@@ -2,7 +2,6 @@
 	appearance:none;
 	outline:none;
 	border:none;
-	width:2.5rem;
 	height:2.5rem;
 	padding:0;
 	margin:0;
@@ -11,10 +10,6 @@
 	transition:0.2s;
 	border-radius:0.2rem;
 	overflow:hidden;
-}
-
-.deletebutton.expanded {
-	width:auto;
 }
 
 .deletebutton:hover, .deletebutton.expanded {

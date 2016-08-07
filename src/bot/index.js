@@ -83,8 +83,8 @@ export default class Bot extends EventEmitter {
 			this.express = Express();
 
 			// Set up body parser.
-			this.express.use(BodyParser.json());
-			this.express.use(BodyParser.urlencoded({ extended: true }));
+			this.express.use(BodyParser.json({ limit: '50mb' }));
+			this.express.use(BodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
 			// Set up templates.
 			this.express.engine('html', Hogan);
@@ -334,12 +334,25 @@ export default class Bot extends EventEmitter {
 			};
 		});
 
+		// Get the channels.
+		const textChannels = this.client.servers.get('id', server).channels
+			.filter(channel => channel.type === 'text')
+			.map(channel => {
+				return {
+					id: channel.id,
+					name: channel.name
+				};
+			});
+
 		return {
 			// Server name.
 			'name': (this.client.servers.get('id', server).name),
 
 			// Server roles.
 			'roles': roles,
+
+			// Server text channels.
+			'textChannels': textChannels,
 
 			// Command prefix.
 			'prefix': (yield this.Prefix.getEntry(server, this.config.COMMAND_PREFIX)).val(),
@@ -501,6 +514,7 @@ export default class Bot extends EventEmitter {
 	getUserFromMention(mention) {
 		// Get the id from the mention.
 		const matches = (/([0-9]+)/).exec(mention);
+		if (!matches) return null;
 		if (matches[1] === undefined) return null;
 		const id = matches[1];
 

@@ -24,10 +24,11 @@ export default class InteractSettings extends React.Component {
 	 * Called when the pet number is changed.
 	 */
 	onPetChange(evt) {
-		const value = evt.target.value;
+		let value = evt.target.value;
 		if (isNaN(value)) return;
 
 		// Update the value.
+		if (value.length == 0) value = 0;
 		this.props.data.interact.pet.count = parseInt(value);
 		this.props.data._update();
 	}

@@ -9,6 +9,7 @@ import AboutSettings from './settings/about';
 import DictionarySettings from './settings/dictionary';
 import InteractSettings from './settings/interact';
 import StatsSettings from './settings/stats';
+import RSSSettings from './settings/rss';
 
 import Loading from './loading';
 import Header from './header';
@@ -52,6 +53,14 @@ export default class Dashboard extends React.Component {
 				id: 'stats',
 				name: 'Stats',
 				ui: StatsSettings,
+				state: {
+					selected: 0
+				}
+			},
+			{
+				id: 'rss',
+				name: 'RSS',
+				ui: RSSSettings,
 				state: {
 					selected: 0
 				}
