@@ -20,6 +20,20 @@ class RSS extends Plugin {
 
 		// Start all feeds.
 		(yield this.Feed.find()).map(feed => this.startFeed(feed));
+
+		// Listen for channel delete.
+		this.client.on('channelDeleted', channel => {
+			co(function*() {
+				// Stop and delete all Feeds that use the channel.
+				const entries = yield this.Feed.find({
+					'channel': channel.id
+				});
+				for (const feed of entries) {
+					this.stopFeed(feed);
+					yield feed.remove();
+				}
+			}.bind(this));
+		});
 	}
 
 	*getData(id) {
@@ -83,6 +97,16 @@ class RSS extends Plugin {
 		const id = feed.get('_id');
 		const refresh = feed.get('refresh');
 		const channel = feed.get('channel');
+		const server = feed.get('server');
+
+		// If the server is managed by the shard and the channel doesn't exist, delete the Feed.
+		if (this.client.servers.has('id', server) && !this.client.channels.has('id', channel)) {
+			feed.remove();
+			return;
+		}
+
+		// Don't do anything if the channel isn't managed by the shard.
+		if (!this.client.channels.has('id', channel)) return;
 
 		// Stop the feed if there is one already going.
 		this.stopFeed(feed);
