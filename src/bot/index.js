@@ -19,8 +19,10 @@ class Bot extends EventEmitter {
 	 *
 	 * @param authorization The authorization data.
 	 * @param config The configuration for the bot.
+	 * @param worker The cluster worker for the bot.
+	 * @param numWorkers The total number of workers.
 	 */
-	constructor(authorization, config) {
+	constructor(authorization, config, worker, numWorkers) {
 		super();
 
 		// Assign the member variables.
@@ -28,8 +30,12 @@ class Bot extends EventEmitter {
 		this.dbUri = authorization.MONGO_URI;
 		this.owners = authorization.OWNERS;
 		this.config = config;
+		this.worker = worker;
+		this.numWorkers = numWorkers;
 		this.client = new Client({
-			forceFetchUsers: true
+			forceFetchUsers: true,
+			shardCount: numWorkers,
+			shardId: worker.id - 1
 		});
 		this.db = null;
 		this.plugins = [];
@@ -95,12 +101,16 @@ class Bot extends EventEmitter {
 
 			// Start listening on the server.
 			this.server = HTTP.createServer(this.express);
-			this.server.listen(this.config.SERVER_PORT, (err) => {
+			this.server.listen(this.config.SERVER_PORT + this.worker.id, (err) => {
 				if (err) return console.error('Could not start web server.');
-				console.log('Started web server on port ' + this.config.SERVER_PORT + '!');
+				console.log('Started web server on port ' + (this.config.SERVER_PORT + this.worker.id) + '!');
 
 				// Login.
 				this.client.loginWithToken(this.token);
+
+				this.client.on('error', (err) => {
+					console.log(err);
+				});
 
 				// Wait for the client to be ready.
 				this.client.on('ready', () => {
@@ -276,6 +286,9 @@ class Bot extends EventEmitter {
 
 		// Close the server.
 		if (this.server) this.server.close();
+
+		// Force a shutdown in 5 seconds.
+		setTimeout(() => process.exit(0), 5000);
 	}
 
 	/*

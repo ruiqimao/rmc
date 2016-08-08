@@ -3,7 +3,7 @@ module.exports = {
 
 	COMMAND_PREFIX: '+', // Command prefix.
 
-	SERVER_PORT: IS_PRODUCTION ? 5003 : 5004, // Server port.
+	SERVER_PORT: IS_PRODUCTION ? 6000 : 7000, // Server port base.
 
 	SERVER_URL: IS_PRODUCTION ? 'http://rmc.sized.io' : 'http://ard.sized.io', // Server URL.
 

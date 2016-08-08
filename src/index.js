@@ -1,4 +1,5 @@
-const Discord = require('discord.js');
+const Cluster = require('cluster');
+const OS = require('os');
 
 const Bot = require('./bot');
 
@@ -30,35 +31,62 @@ function main() {
 		process.exit(1);
 	}
 
-	// Create and start the bot.
-	const bot = new Bot(
-		Authorization,
-		Config);
-	bot.start();
+	// Start a cluster.
+	const numCPUs = OS.cpus().length;
+	if (Cluster.isMaster) {
+		// Fork workers.
+		for (let i = 0; i < numCPUs; i ++) {
+			Cluster.fork();
+		}
 
-	// Catch all the messages from the bot.
-	bot.on('connected', () => {
-		console.log(bot.client.user.username + ' is connected!');
-	});
-	bot.on('ready', () => {
-		console.log(bot.client.user.username + ' is ready to go!');
-	});
-	bot.on('disconnected', (graceful) => {
-		console.log(bot.client.user.username + ' is disconnected.');
+		// Capture SIGINT and SIGTERM.
+		const shutdown = () => {
+			// Send SIGTERM to all workers.
+			const workers = Cluster.workers;
+			for (const id in workers) {
+				const worker = workers[id];
+				worker.kill('SIGTERM');
+			}
+		};
+		process.on('SIGINT', shutdown);
+		process.on('SIGTERM', shutdown);
+	} else {
+		const worker = Cluster.worker;
 
-		// If not graceful, exit with an error code.
-		if (!graceful) process.exit(1);
-		else process.exit(0);
-	});
+		// Create the bot.
+		const bot = new Bot(
+			Authorization,
+			Config,
+			worker,
+			numCPUs);
 
-	// Capture SIGINT and SIGTERM.
-	const shutdown = () => {
-		// Shutdown the bot.
-		console.log('Shutting down...');
-		bot.shutdown();
+		// Catch all the messages from the bot.
+		bot.on('connected', () => {
+			console.log(bot.client.user.username + '(' + worker.id + ') is connected!');
+		});
+		bot.on('ready', () => {
+			console.log(bot.client.user.username + '(' + worker.id + ') is ready to go!');
+		});
+		bot.on('disconnected', (graceful) => {
+			console.log(bot.client.user.username + '(' + worker.id + ') is disconnected.');
+
+			// If not graceful, exit with an error code.
+			if (!graceful) process.exit(1);
+			else process.exit(0);
+		});
+
+		// Capture SIGTERM.
+		const shutdown = () => {
+			// Shutdown the bot.
+			console.log('Shutting down...');
+			bot.shutdown();
+		};
+		process.on('SIGTERM', shutdown);
+		process.on('SIGINT', () => { });
+
+		// Wait to login prevent being rate limited.
+		setTimeout(bot.start.bind(bot), 6000 * (worker.id - 1));
 	}
-	process.on('SIGINT', shutdown);
-	process.on('SIGTERM', shutdown);
 
 }
 

@@ -83,6 +83,7 @@ export default class Dashboard extends React.Component {
 			loaded: false,
 			saving: false,
 			saved: false,
+			saveURL: '',
 			dirty: false,
 			currentUI: 0,
 			uis: [ ],
@@ -100,7 +101,13 @@ export default class Dashboard extends React.Component {
 	 */
 	*loadData() {
 		// Get the data.
-		const data = JSON.parse(yield requestPromise.get(window.location.origin + '/dashboard/data/' + RMC_TOKEN));
+		const response = yield requestPromise({
+			method: 'GET',
+			uri: window.location.origin + '/1/dashboard/' + RMC_TOKEN,
+			resolveWithFullResponse: true
+		});
+		const data = JSON.parse(response.body);
+		const saveURL = response.url;
 
 		// Set the update function.
 		data._update = () => {
@@ -121,6 +128,7 @@ export default class Dashboard extends React.Component {
 		// Update the state.
 		this.setState({
 			loaded: true,
+			saveURL: saveURL,
 			dirty: false,
 			uis: uis,
 			data: data
@@ -136,7 +144,7 @@ export default class Dashboard extends React.Component {
 		// Send the data to the server.
 		const options = {
 			method: 'POST',
-			uri: window.location.origin + '/dashboard/data/' + RMC_TOKEN,
+			uri: this.state.saveURL,
 			body: data,
 			json: true
 		};

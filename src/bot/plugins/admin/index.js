@@ -16,8 +16,8 @@ class Admin extends Plugin {
 		this.router = Express.Router();
 
 		// Add the dashboard path.
-		this.router.get('/dashboard/data/:id', this.loadData.bind(this));
-		this.router.post('/dashboard/data/:id', this.saveData.bind(this));
+		this.router.get('/' + this.bot.worker.id + '/dashboard/:id', this.loadData.bind(this));
+		this.router.post('/' + this.bot.worker.id + '/dashboard/:id', this.saveData.bind(this));
 		this.router.get('/dashboard/:id', this.renderDashboard.bind(this));
 
 		// Add the router to the web server.
@@ -45,7 +45,12 @@ class Admin extends Plugin {
 
 			// Make sure the server exists.
 			if (this.client.servers.get('id', id) == null) {
-				yield dashboards[0].remove();
+				// If this is not the last worker, try redirecting.
+				if (this.bot.worker.id !== this.bot.numWorkers) {
+					res.redirect(this.config.SERVER_URL + '/' + (this.bot.worker.id + 1) + '/dashboard/' + req.params.id);
+					return;
+				}
+
 				res.status(404).end();
 				return;
 			}
@@ -86,6 +91,12 @@ class Admin extends Plugin {
 				res.status(404).end();
 			}
 			const id = dashboards[0].get('server');
+
+			// Make sure the server exists.
+			if (this.client.servers.get('id', id) == null) {
+				res.status(404).end();
+				return;
+			}
 
 			// Get the data.
 			const data = req.body;
