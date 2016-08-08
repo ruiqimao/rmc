@@ -12,7 +12,8 @@ class Stats extends Command {
 
 		// If the user wants to clear stats, they must have permission.
 		if (suffix == 'clear') {
-			return Util.checkPermission(msg.channel, msg.author, 'manageMessages');
+			const commander = (yield this.bot.Commander.getEntry(msg.server.id, '')).val();
+			return Util.checkRole(msg.server, msg.author, commander); // Must be a commander.
 		}
 
 		// Everyone is allowed to look at stats.
