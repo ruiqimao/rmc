@@ -1,6 +1,7 @@
-import { Command, Util } from 'plugin';
+const Command = require('plugin').Command;
+const Util = require('plugin').Util;
 
-export default class Purge extends Command {
+class Purge extends Command {
 
 	get usage() { return '<number>'; }
 	get description() { return 'erase some number of messages in the channel'; }
@@ -40,3 +41,5 @@ export default class Purge extends Command {
 	}
 
 }
+
+module.exports = Purge;

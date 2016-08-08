@@ -1,9 +1,9 @@
-import { EventEmitter } from 'events';
-import { Duplex } from 'stream';
+const EventEmitter = require('events');
+const Duplex = require('stream').Duplex;
 
-import CircularBuffer from 'circular-buffer';
+const CircularBuffer = require('circular-buffer');
 
-export default class BufferStream extends Duplex {
+class BufferStream extends Duplex {
 
 	/*
 	 * Constructor.
@@ -142,4 +142,6 @@ export default class BufferStream extends Duplex {
 		callback();
 	}
 
-};
+}
+
+module.exports = BufferStream;

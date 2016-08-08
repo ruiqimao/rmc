@@ -1,8 +1,8 @@
-import { Command } from 'plugin';
+const Command = require('plugin').Command;
 
-import youtubedl from 'youtube-dl';
+const YoutubeDL = require('youtube-dl');
 
-export default class Play extends Command {
+class Play extends Command {
 
 	get usage() { return '<video-url>|<search>'; }
 	get description() { return 'play audio from a video (YouTube, Vimeo, Youku, etc.)'; }
@@ -37,7 +37,7 @@ export default class Play extends Command {
 		const response = yield this.client.sendMessage(msg, 'Okay, I\'m looking for that video.');
 
 		// Get the video info.
-		youtubedl.getInfo(suffix, ['-q', '--no-warnings', '--force-ipv4'], (err, info) => {
+		YoutubeDL.getInfo(suffix, ['-q', '--no-warnings', '--force-ipv4'], (err, info) => {
 			if (err || info.format_id.startsWith('0')) { // Unknown format is invalid.
 				return this.client.updateMessage(response, msg.author + ', that\'s not a real video, stupid.');
 			}
@@ -52,3 +52,5 @@ export default class Play extends Command {
 	}
 
 }
+
+module.exports = Play;

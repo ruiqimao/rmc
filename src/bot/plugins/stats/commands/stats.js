@@ -1,6 +1,7 @@
-import { Command, Util } from 'plugin';
+const Command = require('plugin').Command;
+const Util = require('plugin').Util;
 
-export default class Stats extends Command {
+class Stats extends Command {
 
 	get usage() { return '[clear]'; }
 	get description() { return 'get the stats for the server'; }
@@ -52,3 +53,5 @@ export default class Stats extends Command {
 	}
 
 }
+
+module.exports = Stats;

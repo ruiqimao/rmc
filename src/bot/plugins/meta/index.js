@@ -1,11 +1,11 @@
-import { Plugin } from 'plugin';
+const Plugin = require('plugin').Plugin;
 
-import Help from './commands/help';
-
-export default class extends Plugin {
+class Meta extends Plugin {
 
 	*init() {
-		this.addCommand('help', Help);
+		this.addCommand('help', require('./commands/help'));
 	}
 
 }
+
+module.exports = Meta;

@@ -1,6 +1,7 @@
-import { Command, Util } from 'plugin';
+const Command = require('plugin').Command;
+const Util = require('plugin').Util;
 
-export default class RSS extends Command {
+class RSS extends Command {
 
 	get usage() { return '<feed URL>'; }
 	get description() { return 'start an RSS feed'; }
@@ -37,3 +38,5 @@ export default class RSS extends Command {
 	}
 
 }
+
+module.exports = RSS;

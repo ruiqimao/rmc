@@ -1,6 +1,6 @@
-import { Command } from 'plugin';
+const Command = require('plugin').Command;
 
-export default class Skip extends Command {
+class Skip extends Command {
 
 	get usage() { return '[number|all]'; }
 	get description() { return 'skip 1 or more songs'; }
@@ -47,3 +47,5 @@ export default class Skip extends Command {
 	}
 
 }
+
+module.exports = Skip

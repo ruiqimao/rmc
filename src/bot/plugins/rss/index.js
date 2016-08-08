@@ -1,19 +1,16 @@
-import { Plugin } from 'plugin';
+const Plugin = require('plugin').Plugin;
 
-import Request from 'request';
-import FeedParser from 'feedparser';
+const Request = require('request');
+const FeedParser = require('feedparser');
 
-import RSS from './commands/rss';
-import ClearRSS from './commands/clearrss';
+const co = require('co');
 
-import co from 'co';
-
-export default class extends Plugin {
+class RSS extends Plugin {
 
 	*init() {
 		// Add commands.
-		this.addCommand('rss', RSS);
-		this.addCommand('clearrss', ClearRSS);
+		this.addCommand('rss', require('./commands/rss'));
+		this.addCommand('clearrss', require('./commands/clearrss'));
 
 		// Create models.
 		this.Feed = this.createModel('rss-feed');
@@ -232,3 +229,4 @@ export default class extends Plugin {
 
 }
 
+module.exports = RSS;

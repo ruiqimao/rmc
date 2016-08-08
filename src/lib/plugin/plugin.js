@@ -1,9 +1,9 @@
-import co from 'co';
+const co = require('co');
 
 /*
  * Plugin.
  */
-export default class Plugin {
+class Plugin {
 
 	/*
 	 * Constructor.
@@ -122,3 +122,5 @@ export default class Plugin {
 	}
 
 }
+
+module.exports = Plugin;

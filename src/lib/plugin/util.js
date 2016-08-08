@@ -1,7 +1,7 @@
 /*
  * Utilities.
  */
-export default class Util {
+class Util {
 
 	/*
 	 * Check whether a message is affirmative.
@@ -63,3 +63,5 @@ export default class Util {
 	}
 
 }
+
+module.exports = Util;

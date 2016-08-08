@@ -1,6 +1,6 @@
-import { Command } from 'plugin';
+const Command = require('plugin').Command;
 
-export default class Uptime extends Command {
+class Uptime extends Command {
 
 	get usage() { return ''; }
 	get description() { return 'find out how long I\'ve been running'; }
@@ -32,3 +32,5 @@ export default class Uptime extends Command {
 	}
 
 }
+
+module.exports = Uptime;

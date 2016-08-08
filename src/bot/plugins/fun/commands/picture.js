@@ -1,6 +1,6 @@
-import { Command } from 'plugin';
+const Command = require('plugin').Command;
 
-export default class Picture extends Command {
+class Picture extends Command {
 
 	get usage() { return ''; }
 	get description() { return 'find a picture of me'; }
@@ -43,3 +43,5 @@ export default class Picture extends Command {
 	}
 
 }
+
+module.exports = Picture;

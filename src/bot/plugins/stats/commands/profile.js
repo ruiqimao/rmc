@@ -1,6 +1,7 @@
-import { Command, Util } from 'plugin';
+const Command = require('plugin').Command;
+const Util = require('plugin').Util;
 
-export default class Profile extends Command {
+class Profile extends Command {
 
 	get usage() { return '<user>'; }
 	get description() { return 'get a user\'s profile'; }
@@ -52,3 +53,5 @@ export default class Profile extends Command {
 	}
 
 }
+
+module.exports = Profile;

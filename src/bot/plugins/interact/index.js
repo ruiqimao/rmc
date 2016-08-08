@@ -1,13 +1,12 @@
-import { Plugin } from 'plugin';
+const Plugin = require('plugin').Plugin;
 
-import Pet from './commands/pet';
-import Slap from './commands/slap';
-
-export default class extends Plugin {
+class Interact extends Plugin {
 
 	*init() {
-		this.addCommand('pet', Pet);
-		this.addCommand('slap', Slap);
+		this.addCommand('pet', require('./commands/pet'));
+		this.addCommand('slap', require('./commands/slap'));
 	}
 
 }
+
+module.exports = Interact;

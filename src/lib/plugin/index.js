@@ -1,9 +1,5 @@
-import Plugin from './plugin';
-import Command from './command';
-import Util from './util';
-
-export {
-	Plugin,
-	Command,
-	Util
-}
+module.exports = {
+	Plugin: require('./plugin'),
+	Command: require('./command'),
+	Util: require('./util')
+};

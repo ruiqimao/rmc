@@ -1,6 +1,4 @@
-'use strict';
-
-export default class CircularBuffer {
+class CircularBuffer {
 
 	/*
 	 * Constructor.
@@ -100,4 +98,6 @@ export default class CircularBuffer {
 	}
 
 
-};
+}
+
+module.exports = CircularBuffer;

@@ -1,5 +1,4 @@
-
-export default {
+module.exports = {
 	GAME: IS_PRODUCTION ? 'Beating Up AR-D' : 'Running from RM-C', // Game to play.
 
 	COMMAND_PREFIX: '+', // Command prefix.
@@ -20,4 +19,4 @@ export default {
 		'stats',
 		'rss'
 	]
-}
+};

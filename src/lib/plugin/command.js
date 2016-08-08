@@ -1,9 +1,9 @@
-import co from 'co';
+const co = require('co');
 
 /*
  * Command.
  */
-export default class Command {
+class Command {
 
 	/*
 	 * Constructor.
@@ -88,3 +88,5 @@ export default class Command {
 	}
 
 }
+
+module.exports = Command;

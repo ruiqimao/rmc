@@ -1,11 +1,11 @@
-import { Command } from 'plugin';
+const Command = require('plugin').Command;
 
 const RESPONSES = [
 	':heart:',
 	'B-baka! It\'s not like I wanted you to pet me or anything...'
 ];
 
-export default class Pet extends Command {
+class Pet extends Command {
 
 	get usage() { return ''; }
 	get description() { return 'pet me for being a good robot!'; }
@@ -69,3 +69,5 @@ export default class Pet extends Command {
 	}
 
 }
+
+module.exports = Pet;

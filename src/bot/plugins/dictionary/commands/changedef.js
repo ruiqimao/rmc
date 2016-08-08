@@ -1,6 +1,7 @@
-import { Command, Util } from 'plugin';
+const Command = require('plugin').Command;
+const Util = require('plugin').Util;
 
-export default class ChangeDef extends Command {
+class ChangeDef extends Command {
 
 	get usage() { return '<phrase>'; }
 	get description() { return 'change the definition of something!'; }
@@ -50,3 +51,5 @@ export default class ChangeDef extends Command {
 	}
 
 }
+
+module.exports = ChangeDef;

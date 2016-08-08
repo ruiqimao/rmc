@@ -1,4 +1,4 @@
-import { Command } from 'plugin';
+const Command = require('plugin').Command;
 
 const RESPONSES = [
 	'Don\'t touch me.',
@@ -11,7 +11,7 @@ const RESPONSES = [
 	'I\'ll seriously get angry!'
 ];
 
-export default class Slap extends Command {
+class Slap extends Command {
 
 	get usage() { return ''; }
 	get description() { return 'slap me for being a bad robot :('; }
@@ -52,3 +52,5 @@ export default class Slap extends Command {
 	}
 
 }
+
+module.exports = Slap;

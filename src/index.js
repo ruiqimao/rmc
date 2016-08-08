@@ -1,11 +1,11 @@
-import Discord from 'discord.js';
+const Discord = require('discord.js');
 
-import Bot from './bot';
+const Bot = require('./bot');
 
-import Authorization from './authorization';
-import Config from './bot/config';
+const Authorization = require('./authorization');
+const Config = require('./bot/config');
 
-export function main() {
+function main() {
 
 	// Set the authorization according to the environment.
 	if (IS_PRODUCTION) {
@@ -61,3 +61,5 @@ export function main() {
 	process.on('SIGTERM', shutdown);
 
 }
+
+exports.main = main;

@@ -1,6 +1,6 @@
-import { Command } from 'plugin';
+const Command = require('plugin').Command;
 
-export default class Leave extends Command {
+class Leave extends Command {
 
 	get usage() { return ''; }
 	get description() { return 'leave a voice channel'; }
@@ -25,3 +25,5 @@ export default class Leave extends Command {
 	}
 
 }
+
+module.exports = Leave;

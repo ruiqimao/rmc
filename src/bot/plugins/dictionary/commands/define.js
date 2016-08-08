@@ -1,8 +1,9 @@
-import { Command } from 'plugin';
+const Command = require('plugin').Command;
+const Util = require('plugin').Util;
 
-import requestPromise from 'request-promise';
+const requestPromise = require('request-promise');
 
-export default class Define extends Command {
+class Define extends Command {
 
 	get usage() { return '<phrase>'; }
 	get description() { return 'define something!'; }
@@ -44,3 +45,5 @@ export default class Define extends Command {
 	}
 
 }
+
+module.exports = Define;

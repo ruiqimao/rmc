@@ -1,6 +1,6 @@
-import { Command } from 'plugin';
+const Command = require('plugin').Command;
 
-export default class Say extends Command {
+class Say extends Command {
 
 	get usage() { return '<text>'; }
 	get description() { return 'make me say something'; }
@@ -25,3 +25,5 @@ export default class Say extends Command {
 	}
 
 }
+
+module.exports = Say;

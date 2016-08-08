@@ -1,6 +1,6 @@
-import { Command } from 'plugin';
+const Command = require('plugin').Command;
 
-export default class Join extends Command {
+class Join extends Command {
 
 	get usage() { return ''; }
 	get description() { return 'join a voice channel'; }
@@ -23,3 +23,5 @@ export default class Join extends Command {
 	}
 
 }
+
+module.exports = Join;

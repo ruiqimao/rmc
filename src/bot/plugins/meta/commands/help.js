@@ -1,6 +1,6 @@
-import { Command } from 'plugin';
+const Command = require('plugin').Command;
 
-export default class Help extends Command {
+class Help extends Command {
 
 	get usage() { return '[command]'; }
 	get description() { return 'show this helpful list!'; }
@@ -83,5 +83,6 @@ export default class Help extends Command {
 		return entry;
 	}
 
-
 }
+
+module.exports = Help;

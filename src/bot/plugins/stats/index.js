@@ -1,15 +1,12 @@
-import { Plugin } from 'plugin';
+const Plugin = require('plugin').Plugin;
 
-import Stats from './commands/stats';
-import Profile from './commands/profile';
+const co = require('co');
 
-import co from 'co';
-
-export default class extends Plugin {
+class Stats extends Plugin {
 
 	*init() {
-		this.addCommand('stats', Stats);
-		this.addCommand('profile', Profile);
+		this.addCommand('stats', require('./commands/stats'));
+		this.addCommand('profile', require('./commands/profile'));
 
 		// Create a class for message counts.
 		this.MessageCount = this.createModel('messagecount');
@@ -94,3 +91,5 @@ export default class extends Plugin {
 	}
 
 }
+
+module.exports = Stats;

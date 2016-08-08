@@ -1,6 +1,7 @@
-import { Command, Util } from 'plugin';
+const Command = require('plugin').Command;
+const Util = require('plugin').Util;
 
-export default class ClearRSS extends Command {
+class ClearRSS extends Command {
 
 	get usage() { return ''; }
 	get description() { return 'remove all RSS feeds on this channel'; }
@@ -29,3 +30,5 @@ export default class ClearRSS extends Command {
 	}
 
 }
+
+module.exports = ClearRSS;

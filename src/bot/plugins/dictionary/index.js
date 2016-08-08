@@ -1,15 +1,11 @@
-import { Plugin } from 'plugin';
+const Plugin = require('plugin').Plugin;
 
-import Define from './commands/define';
-import ChangeDef from './commands/changedef';
-import ClearDef from './commands/cleardef';
-
-export default class extends Plugin {
+class Dictionary extends Plugin {
 
 	*init() {
-		this.addCommand('define', Define);
-		this.addCommand('changedef', ChangeDef);
-		this.addCommand('cleardef', ClearDef);
+		this.addCommand('define', require('./commands/define'));
+		this.addCommand('changedef', require('./commands/changedef'));
+		this.addCommand('cleardef', require('./commands/cleardef'));
 
 		// Create a class for definitions.
 		this.Definition = this.createModel('definition');
@@ -65,3 +61,5 @@ export default class extends Plugin {
 	}
 
 }
+
+module.exports = Dictionary;

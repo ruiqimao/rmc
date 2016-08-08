@@ -1,17 +1,18 @@
-import { Client } from 'discord.js';
-import EventEmitter from 'events';
-import Mongorito, { Model } from 'mongorito';
+const Client = require('discord.js').Client;
+const EventEmitter = require('events');
+const Mongorito = require('mongorito');
+const Model = Mongorito.Model;
 
-import co from 'co';
-import HTTP from 'http';
-import Express from 'express';
-import Hogan from 'hogan-express';
-import BodyParser from 'body-parser';
+const co = require('co');
+const HTTP = require('http');
+const Express = require('express');
+const Hogan = require('hogan-express');
+const BodyParser = require('body-parser');
 
 /*
  * Class for RMC bot.
  */
-export default class Bot extends EventEmitter {
+class Bot extends EventEmitter {
 
 	/*
 	 * Constructor.
@@ -196,7 +197,7 @@ export default class Bot extends EventEmitter {
 		}
 
 		return co(function*() {
-			const Plugin = require('./plugins/' + name).default;
+			const Plugin = require('./plugins/' + name);
 			const plugin = new Plugin(this);
 			yield plugin.load();
 			this.plugins.push({
@@ -523,3 +524,5 @@ export default class Bot extends EventEmitter {
 	}
 
 }
+
+module.exports = Bot;

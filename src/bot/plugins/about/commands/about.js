@@ -1,9 +1,9 @@
-import { Command } from 'plugin';
+const Command = require('plugin').Command;
 
 const ABOUT =
 	`I'm "Ruinous Might Cannon Type", or otherwise known as "RM-C". I was made by Ernesta Kuhne (read: Ruiqi Mao) and if you piss me off, I'll seriously hurt you. <3`;
 
-export default class About extends Command {
+class About extends Command {
 
 	get usage() { return ''; }
 	get description() { return 'about me!'; }
@@ -36,3 +36,5 @@ export default class About extends Command {
 	}
 
 }
+
+module.exports = About;

@@ -1,6 +1,7 @@
-import { Command, Util } from 'plugin';
+const Command = require('plugin').Command;
+const Util = require('plugin').Util;
 
-export default class ClearDef extends Command {
+class ClearDef extends Command {
 
 	get usage() { return '[phrase]'; }
 	get description() { return 'clear a custom definition.'; }
@@ -45,3 +46,5 @@ export default class ClearDef extends Command {
 	}
 
 }
+
+module.exports = ClearDef;

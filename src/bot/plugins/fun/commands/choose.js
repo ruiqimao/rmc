@@ -1,6 +1,6 @@
-import { Command } from 'plugin';
+const Command = require('plugin').Command;
 
-export default class Choose extends Command {
+class Choose extends Command {
 
 	get usage() { return '<choice1>;[choice2];...'; }
 	get description() { return 'randomly choose something'; }
@@ -28,3 +28,5 @@ export default class Choose extends Command {
 	}
 
 }
+
+module.exports = Choose;

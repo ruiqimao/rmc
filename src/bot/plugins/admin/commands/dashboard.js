@@ -1,8 +1,9 @@
-import { Command, Util } from 'plugin';
+const Command = require('plugin').Command;
+const Util = require('plugin').Util;
 
-import Crypto from 'crypto';
+const Crypto = require('crypto');
 
-export default class Dashboard extends Command {
+class Dashboard extends Command {
 
 	get usage() { return '[generate]'; }
 	get description() { return 'View the admin dashboard or regenerate the link for one.'; }
@@ -59,3 +60,5 @@ export default class Dashboard extends Command {
 	}
 
 }
+
+module.exports = Dashboard;

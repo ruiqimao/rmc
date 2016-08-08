@@ -1,17 +1,14 @@
-import { Plugin } from 'plugin';
+const Plugin = require('plugin').Plugin;
 
-import Play from './commands/play';
-import Skip from './commands/skip';
+const Request = require('request');
 
-import request from 'request';
+const BufferStream = require('buffer-stream');
 
-import BufferStream from 'buffer-stream';
-
-export default class extends Plugin {
+class Music extends Plugin {
 
 	*init() {
-		this.addCommand('play', Play);
-		this.addCommand('skip', Skip);
+		this.addCommand('play', require('./commands/play'));
+		this.addCommand('skip', require('./commands/skip'));
 
 		// Set the constants.
 		this.MAX_QUEUE = 20; // Maximum queue size.
@@ -91,7 +88,7 @@ export default class extends Plugin {
 
 		// Pipe the video into a buffer stream.
 		const buffer = new BufferStream(this.INITIAL_BUFFER, this.MAX_BUFFER);
-		request.get(vid.url).pipe(buffer);
+		Request.get(vid.url).pipe(buffer);
 
 		// Start streaming.
 		connection.playRawStream(buffer).then((intent) => {
@@ -125,3 +122,5 @@ export default class extends Plugin {
 	}
 
 }
+
+module.exports = Music;

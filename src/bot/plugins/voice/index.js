@@ -1,13 +1,12 @@
-import { Plugin } from 'plugin';
+const Plugin = require('plugin').Plugin;
 
-import Join from './commands/join';
-import Leave from './commands/leave';
-
-export default class extends Plugin {
+class Voice extends Plugin {
 
 	*init() {
-		this.addCommand('join', Join);
-		this.addCommand('leave', Leave);
+		this.addCommand('join', require('./commands/join'));
+		this.addCommand('leave', require('./commands/leave'));
 	}
 
 }
+
+module.exports = Voice;

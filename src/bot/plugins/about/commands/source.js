@@ -1,6 +1,6 @@
-import { Command } from 'plugin';
+const Command = require('plugin').Command;
 
-export default class Source extends Command {
+class Source extends Command {
 
 	get usage() { return ''; }
 	get description() { return 'see my source code'; }
@@ -20,3 +20,5 @@ export default class Source extends Command {
 	}
 
 }
+
+module.exports = Source;

@@ -1,16 +1,13 @@
-import { Plugin } from 'plugin';
+const Plugin = require('plugin').Plugin;
 
-import Dashboard from './commands/dashboard';
-import Purge from './commands/purge';
+const co = require('co');
+const Express = require('express');
 
-import co from 'co';
-import Express from 'express';
-
-export default class extends Plugin {
+class Admin extends Plugin {
 
 	*init() {
-		this.addCommand('dashboard', Dashboard);
-		this.addCommand('purge', Purge);
+		this.addCommand('dashboard', require('./commands/dashboard'));
+		this.addCommand('purge', require('./commands/purge'));
 
 		// Generate classes.
 		this.Dash = this.createModel('dashboard');
@@ -128,3 +125,5 @@ export default class extends Plugin {
 	}
 
 }
+
+module.exports = Admin;

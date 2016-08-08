@@ -1,15 +1,13 @@
-import { Plugin } from 'plugin';
+const Plugin = require('plugin').Plugin;
 
-import Choose from './commands/choose';
-import Picture from './commands/picture';
-import Say from './commands/say';
-
-export default class extends Plugin {
+class Fun extends Plugin {
 
 	*init() {
-		this.addCommand('choose', Choose);
-		this.addCommand('picture', Picture);
-		this.addCommand('say', Say);
+		this.addCommand('choose', require('./commands/choose'));
+		this.addCommand('picture', require('./commands/picture'));
+		this.addCommand('say', require('./commands/say'));
 	}
 
 }
+
+module.exports = Fun;
