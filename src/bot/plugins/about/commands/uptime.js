@@ -27,7 +27,7 @@ class Uptime extends Command {
 		if (seconds > 0) segments.push(seconds + ' second' + ((seconds == 1) ? '' : 's'));
 		const dateString = segments.join(', ');
 
-		// Return the choice.
+		// Return the uptime.
 		this.client.sendMessage(msg, 'I\'ve been running for **' + dateString + '**!');
 	}
 
