@@ -64,8 +64,7 @@ class Bot extends EventEmitter {
 			'getVoiceConnection',
 			'permissionDenied',
 			'errorOccurred',
-			'createModel',
-			'getUserFromMention'
+			'createModel'
 		];
 
 		// Bind functions.
@@ -516,24 +515,6 @@ class Bot extends EventEmitter {
 				return this.get('value');
 			}
 		};
-	}
-
-	/*
-	 * Get a user from a mention.
-	 *
-	 * @param mention The mention.
-	 *
-	 * @return The user. null if the user is not found.
-	 */
-	getUserFromMention(mention) {
-		// Get the id from the mention.
-		const matches = (/([0-9]+)/).exec(mention);
-		if (!matches) return null;
-		if (matches[1] === undefined) return null;
-		const id = matches[1];
-
-		// Return the user.
-		return this.client.users.get('id', id);
 	}
 
 }

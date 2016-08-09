@@ -21,8 +21,8 @@ class Profile extends Command {
 		}
 
 		// Get the user mentioned.
-		const user = this.getUserFromMention(suffix);
-		if (user === null) {
+		const user = msg.mentions[0];
+		if (user === undefined) {
 			return this.client.reply(msg, 'I dunno who that is... too bad.');
 		}
 
