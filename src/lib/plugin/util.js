@@ -62,6 +62,41 @@ class Util {
 		return server.rolesOfUser(user).reduce((p, c, i) => p || c.name == role, false);
 	}
 
+	/*
+	 * Serializing functions.
+	 */
+	static serializeServer(server) {
+		return {
+			id: server.id,
+			name: server.name
+		};
+	}
+	static serializeUser(user) {
+		return {
+			id: user.id,
+			name: user.name
+		};
+	}
+	static serializeMessage(message) {
+		return {
+			id: message.id,
+			content: message.cleanContent
+		};
+	}
+	static serializeServerChannel(channel) {
+		return {
+			id: channel.id,
+			name: channel.name
+		};
+	}
+	static serializeRole(role) {
+		return {
+			id: role.id,
+			name: role.name,
+			permissions: role.serialize()
+		};
+	}
+
 }
 
 module.exports = Util;

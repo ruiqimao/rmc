@@ -1,138 +1,150 @@
 const Plugin = require('plugin').Plugin;
+const Util = require('plugin').Util;
 
-const co = require('co');
-const Express = require('express');
+const LOG_PURGE = 6 * 60 * 60 * 1000; // Purge the logs every 6 hours. Cannot be changed.
 
 class Admin extends Plugin {
 
 	*init() {
-		this.addCommand('dashboard', require('./commands/dashboard'));
 		this.addCommand('purge', require('./commands/purge'));
 
-		// Generate classes.
-		this.Dash = this.createModel('dashboard');
+		// Listen for all events.
+		this.log = this.log.bind(this);
+		this.client.on('message', this.log('message'));
+		this.client.on('messageDeleted', this.log('message deleted'));
+		this.client.on('messageUpdated', this.log('message updated'));
+		this.client.on('serverNewMember', this.log('user new'));
+		this.client.on('serverMemberRemoved', this.log('user removed'));
+		this.client.on('serverMemberUpdated', this.log('user updated'));
+		this.client.on('userBanned', this.log('user banned'));
+		this.client.on('userUnbanned', this.log('user unbanned'));
 
-		// Create a router for the dashboard.
-		this.router = Express.Router();
+		// Set a timer to purge the logs.
+		setInterval(this.purge.bind(this), LOG_PURGE);
 
-		// Add the dashboard path.
-		this.router.get('/' + this.bot.worker.id + '/dashboard/:id', this.loadData.bind(this));
-		this.router.post('/' + this.bot.worker.id + '/dashboard/:id', this.saveData.bind(this));
-		this.router.get('/dashboard/:id', this.renderDashboard.bind(this));
+		// Create a model to store logs.
+		this.Log = this.createModel('admin-log');
+	}
 
-		// Add the router to the web server.
-		this.bot.express.use(this.router);
+	*getData(id) {
+		// Get all logs from within the last purge period.
+		const logs = (yield this.Log.sort('timestamp', -1).find({
+			'data.server.id': id,
+			timestamp: { $gte: new Date().getTime() - LOG_PURGE }
+		})).map(entry => ({
+			type: entry.get('type'),
+			timestamp: entry.get('timestamp'),
+			data: entry.get('data')
+		}));
+
+		// Return the data.
+		return {
+			logs: logs
+		};
 	}
 
 	/*
-	 * Load the bot data.
-	 *
-	 * @param req The Express request.
-	 * @param res The Express response.
+	 * Create a log.
 	 */
-	loadData(req, res) {
-		co(function*() {
-			// Get the server.
-			const dashboards = yield this.Dash.find({
-				'value': req.params.id
+	log(type) {
+		return function() {
+			// Create a new log.
+			const log = new this.Log({
+				timestamp: new Date().getTime(),
+				type: type
 			});
-			if (dashboards.length == 0) {
-				// If there is no valid id, 404.
-				res.status(404).end();
-				return;
-			}
-			const id = dashboards[0].get('server');
 
-			// Make sure the server exists.
-			if (this.client.servers.get('id', id) == null) {
-				// If this is not the last worker, try redirecting.
-				if (this.bot.worker.id !== this.bot.numWorkers) {
-					res.redirect(this.config.SERVER_URL + '/' + (this.bot.worker.id + 1) + '/dashboard/' + req.params.id);
-					return;
-				}
-
-				res.status(404).end();
-				return;
-			}
-
-			// Compile the data.
+			// Log information accordingly.
 			const data = {};
+			switch (type) {
+				case 'message': {
+					const message = arguments[0];
+					// Ignore if PM.
+					if (message.channel.isPrivate) return;
 
-			// Get data from the bot.
-			data._bot = yield this.bot.getData(id);
+					data.message = Util.serializeMessage(message);
+					data.user = Util.serializeUser(message.author);
+					data.channel = Util.serializeServerChannel(message.channel);
+					data.server = Util.serializeServer(message.server);
+				} break;
 
-			// Get data from all plugins.
-			for (const plugin of this.bot.plugins) {
-				data[plugin.name] = yield plugin.plugin._getData(id);
+				case 'message deleted': {
+					const message = arguments[0];
+					// Ignore if message is null.
+					if (message === null) return;
+
+					data.message = Util.serializeMessage(message);
+					data.user = Util.serializeUser(message.author);
+					data.channel = Util.serializeServerChannel(message.channel);
+					data.server = Util.serializeServer(message.server);
+				} break;
+
+				case 'message updated': {
+					const old = arguments[0];
+					const updated = arguments[1];
+					// Ignore if PM.
+					if (old.channel.isPrivate) return;
+
+					data.old = Util.serializeMessage(old);
+					data.updated = Util.serializeMessage(updated);
+					data.user = Util.serializeUser(old.author);
+					data.channel = Util.serializeServerChannel(old.channel);
+					data.server = Util.serializeServer(old.server);
+				} break;
+
+				case 'user new': {
+					const server = arguments[0];
+					const user = arguments[1];
+					data.user = Util.serializeUser(user);
+					data.server = Util.serializeServer(server);
+				} break;
+
+				case 'user removed': {
+					const server = arguments[0];
+					const user = arguments[1];
+					data.user = Util.serializeUser(user);
+					data.server = Util.serializeServer(server);
+				} break;
+
+				case 'user updated': {
+					const server = arguments[0];
+					const old = arguments[1];
+					const updated = arguments[2];
+					data.old = Util.serializeUser(old);
+					data.updated = Util.serializeUser(updated);
+					data.server = Util.serializeServer(server);
+				} break;
+
+				case 'user banned': {
+					const user = arguments[0];
+					const server = arguments[1];
+					data.user = Util.serializeUser(user);
+					data.server = Util.serializeServer(server);
+				} break;
+
+				case 'user unbanned': {
+					const user = arguments[0];
+					const server = arguments[1];
+					data.user = Util.serializeUser(user);
+					data.server = Util.serializeServer(server);
+				} break;
 			}
 
-			// Respond with the data.
-			res.json(data);
-		}.bind(this)).catch((err) => {
-			console.error(err);
-			res.status(500).end();
-		});
+			// Save the log.
+			log.set('data', data);
+			log.save();
+		}.bind(this);
 	}
 
 	/*
-	 * Save the bot data.
-	 *
-	 * @param req The Express request.
-	 * @param res The Express response.
+	 * Purges logs.
 	 */
-	saveData(req, res) {
-		co(function*() {
-			// Get the server.
-			const dashboards = yield this.Dash.find({
-				'value': req.params.id
-			});
-			if (dashboards.length == 0) {
-				// If there is no valid id, 404.
-				res.status(404).end();
-			}
-			const id = dashboards[0].get('server');
-
-			// Make sure the server exists.
-			if (this.client.servers.get('id', id) == null) {
-				res.status(404).end();
-				return;
-			}
-
-			// Get the data.
-			const data = req.body;
-
-			// Save the bot data.
-			yield this.bot.saveData(id, data._bot);
-
-			// Save data to all plugins.
-			for (const plugin of this.bot.plugins) {
-				if (data[plugin.name]) yield plugin.plugin._saveData(id, data[plugin.name]);
-			}
-
-			res.end();
-		}.bind(this));
-	}
-
-	/*
-	 * Render the dashboard.
-	 *
-	 * @param req The Express request.
-	 * @param res The Express response.
-	 */
-	renderDashboard(req, res) {
-		co(function*() {
-			// Get the server.
-			const dashboards = yield this.Dash.find({
-				'value': req.params.id
-			});
-			if (dashboards.length > 0) {
-				// Render the dashboard.
-				res.render(__dirname + '/../../dashboard/views/dashboard.html', { token: req.params.id });
-			} else {
-				// Dashboard doesn't exist.
-				res.status(404).end();
-			}
-		}.bind(this));
+	purge() {
+		// Find all logs outside the purge period and remov them.
+		const now = new Date().getTime();
+		this.Log.remove({
+			timestamp: { $lt: now - LOG_PURGE }
+		}).catch(err => {});
 	}
 
 }

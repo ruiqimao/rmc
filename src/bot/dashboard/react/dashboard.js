@@ -9,6 +9,7 @@ import AboutSettings from './settings/about';
 import DictionarySettings from './settings/dictionary';
 import InteractSettings from './settings/interact';
 import StatsSettings from './settings/stats';
+import AdminSettings from './settings/admin';
 import RSSSettings from './settings/rss';
 
 import Loading from './loading';
@@ -55,6 +56,20 @@ export default class Dashboard extends React.Component {
 				ui: StatsSettings,
 				state: {
 					selected: 0
+				}
+			},
+			{
+				id: 'admin',
+				name: 'Admin',
+				ui: AdminSettings,
+				state: {
+					selected: 0,
+					logs: {
+						filter: {
+							message: true,
+							user: true
+						}
+					}
 				}
 			},
 			{

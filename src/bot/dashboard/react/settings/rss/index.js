@@ -29,7 +29,7 @@ export default class RSSSettings extends React.Component {
 	}
 
 	/*
-	 * Called when a definition is deleted.
+	 * Called when a feed is deleted.
 	 */
 	onDelete() {
 		const data = this.props.data.rss;
@@ -40,16 +40,16 @@ export default class RSSSettings extends React.Component {
 		state.selected = Math.max(state.selected - 1, 0);
 		state._update();
 
-		// Remove the definition.
+		// Remove the feed.
 		data._.splice(selected, 1);
 		this.props.data._update();
 	}
 
 	/*
-	 * Called on a phrase selection change.
+	 * Called on a feed selection change.
 	 */
 	onSelectChange(index) {
-		// Update the selected phrase.
+		// Update the selected feed.
 		const state = this.props.state;
 		state.selected = index;
 		state._update();

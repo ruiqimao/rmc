@@ -70,9 +70,8 @@ function main() {
 		bot.on('disconnected', (graceful) => {
 			console.log(bot.client.user.username + '(' + worker.id + ') is disconnected.');
 
-			// If not graceful, exit with an error code.
-			if (!graceful) process.exit(1);
-			else process.exit(0);
+			// If graceful, exit.
+			if (graceful) process.exit(0);
 		});
 
 		// Capture SIGTERM.

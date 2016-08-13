@@ -1,0 +1,21 @@
+.options {
+	position:absolute;
+	left:1px;
+	top:0;
+	bottom:0;
+	width:200px;
+	border-right:1px solid #f0f0f0;
+	box-sizing:border-box;
+}
+
+.content {
+	position:absolute;
+	left:201px;
+	top:0;
+	bottom:0;
+	right:1rem;
+}
+
+.contentContent {
+	padding:1rem;
+}

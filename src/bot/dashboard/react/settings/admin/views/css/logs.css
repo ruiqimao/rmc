@@ -1,0 +1,37 @@
+.filters:after {
+	content:'';
+	display:block;
+	clear:both;
+}
+
+.filter {
+	float:left;
+	width:50%;
+}
+
+.entries {
+	font-family:Cousine;
+	font-size:0.8rem;
+	color:#444444;
+}
+
+.entry {
+	margin-bottom:0.5rem;
+}
+
+.logObj {
+	font-weight:600;
+	color:#1870a8;
+}
+
+.logMsg {
+	color:#666666;
+}
+
+@media (max-width:800px) {
+
+	.filter {
+		width:100%;
+	}
+
+}

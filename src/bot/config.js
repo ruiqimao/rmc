@@ -10,6 +10,7 @@ module.exports = {
 	PLUGINS: [ // All enabled plugins.
 		'meta',
 		'about',
+		'dashboard',
 		'interact',
 		'fun',
 		'admin',
