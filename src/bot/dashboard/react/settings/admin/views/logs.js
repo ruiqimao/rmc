@@ -97,12 +97,6 @@ export default class Logs extends React.Component {
 					entry.push(lotd(d.user));
 					entry.push(' left');
 				} break;
-				case 'user updated': {
-					entry.push(lotd(d.old));
-					entry.push(' updated (now ');
-					entry.push(lotd(d.updated));
-					entry.push(')');
-				} break;
 				case 'user banned': {
 					entry.push(lotd(d.user));
 					entry.push(' banned');

@@ -15,7 +15,6 @@ class Admin extends Plugin {
 		this.client.on('messageUpdated', this.log('message updated'));
 		this.client.on('serverNewMember', this.log('user new'));
 		this.client.on('serverMemberRemoved', this.log('user removed'));
-		this.client.on('serverMemberUpdated', this.log('user updated'));
 		this.client.on('userBanned', this.log('user banned'));
 		this.client.on('userUnbanned', this.log('user unbanned'));
 
@@ -103,15 +102,6 @@ class Admin extends Plugin {
 					const server = arguments[0];
 					const user = arguments[1];
 					data.user = Util.serializeUser(user);
-					data.server = Util.serializeServer(server);
-				} break;
-
-				case 'user updated': {
-					const server = arguments[0];
-					const old = arguments[1];
-					const updated = arguments[2];
-					data.old = Util.serializeUser(old);
-					data.updated = Util.serializeUser(updated);
 					data.server = Util.serializeServer(server);
 				} break;
 
