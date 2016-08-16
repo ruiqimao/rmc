@@ -38,7 +38,7 @@ class Play extends Command {
 
 		// Get the video info.
 		YoutubeDL.getInfo(suffix, ['-q', '--no-warnings', '--force-ipv4'], (err, info) => {
-			if (err || info.format_id.startsWith('0')) { // Unknown format is invalid.
+			if (err || info.format_id === undefined || info.format_id.startsWith('0')) { // Unknown format is invalid.
 				return this.client.updateMessage(response, msg.author + ', that\'s not a real video, stupid.');
 			}
 
