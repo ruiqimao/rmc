@@ -84,11 +84,13 @@ class Admin extends Plugin {
 					// Ignore if PM.
 					if (old && old.channel.isPrivate) return;
 
-					data.old = Util.serializeMessage(old);
+					if (data.old) {
+						data.old = Util.serializeMessage(old);
+					}
 					data.updated = Util.serializeMessage(updated);
-					data.user = Util.serializeUser(old.author);
-					data.channel = Util.serializeServerChannel(old.channel);
-					data.server = Util.serializeServer(old.server);
+					data.user = Util.serializeUser(updated.author);
+					data.channel = Util.serializeServerChannel(updated.channel);
+					data.server = Util.serializeServer(updated.server);
 				} break;
 
 				case 'user new': {
