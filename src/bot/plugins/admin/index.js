@@ -82,7 +82,7 @@ class Admin extends Plugin {
 					const old = arguments[0];
 					const updated = arguments[1];
 					// Ignore if PM.
-					if (old.channel.isPrivate) return;
+					if (old && old.channel.isPrivate) return;
 
 					data.old = Util.serializeMessage(old);
 					data.updated = Util.serializeMessage(updated);
