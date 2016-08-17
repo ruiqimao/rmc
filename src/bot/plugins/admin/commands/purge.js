@@ -15,7 +15,7 @@ class Purge extends Command {
 
 	*process(msg, suffix) {
 		// Check the number of messages to delete.
-		const number = parseInt(suffix);
+		let number = parseInt(suffix);
 		if (isNaN(number)) return this.client.reply(msg, 'Give me a number of messages to delete. A NUMBER, dumbass.');
 		const numberSuffix = (number == 1 ? '' : 's');
 
@@ -29,11 +29,22 @@ class Purge extends Command {
 			// Tell the user the messages are being deleted.
 			yield this.client.sendMessage(msg, 'Alright, I\'m deleting ' + number + ' message' + numberSuffix + '!');
 
-			// Get the message logs.
-			const messages = yield this.client.getChannelLogs(msg, number + 4); // +4 for the 4 extra messages.
+			number += 4; // +4 for the 4 extra messages.
+			let messages;
+			while (number > 0) {
+				// Get the message logs, 100 at a time.
+				const numMessages = Math.min(number, 100);
+				messages = yield this.client.getChannelLogs(msg, numMessages);
+				if (messages.length > 0) {
+					yield this.client.deleteMessages(messages);
+					number -= numMessages;
 
-			// Delete them all!
-			this.client.deleteMessages(messages);
+					// Wait a second to prevent rate throttling.
+					yield new Promise(resolve => setTimeout(resolve, 1000));
+				} else {
+					break;
+				}
+			}
 		} else {
 			// Tell the user the response was negative.
 			this.client.sendMessage(msg, 'Okay, I won\'t touch the messages.');

@@ -7,6 +7,8 @@ class Admin extends Plugin {
 
 	*init() {
 		this.addCommand('purge', require('./commands/purge'));
+		this.addCommand('kick', require('./commands/kick'));
+		this.addCommand('ban', require('./commands/ban'));
 
 		// Listen for all events.
 		this.log = this.log.bind(this);
@@ -26,8 +28,8 @@ class Admin extends Plugin {
 	}
 
 	*getData(id) {
-		// Get all logs from within the last purge period.
-		const logs = (yield this.Log.sort('timestamp', -1).find({
+		// Get last 500 logs from within the last purge period.
+		const logs = (yield this.Log.sort('timestamp', -1).limit(500).find({
 			'data.server.id': id,
 			timestamp: { $gte: new Date().getTime() - LOG_PURGE }
 		})).map(entry => ({

@@ -29,7 +29,7 @@ export default class Logs extends React.Component {
 	 * Render the content.
 	 */
 	renderContent() {
-		const data = this.props.data.logs;
+		const data = this.props.data._.logs;
 		const state = this.props.state.logs;
 
 		// Define a function to turn log objects into DOM object.
@@ -110,7 +110,7 @@ export default class Logs extends React.Component {
 			return (
 				<div
 					className={ styles.entry }
-					key={ log.timestamp }>
+					key={ log.timestamp + '-' + Math.random() * 1000 }>
 					{ entry }
 				</div>
 			);
@@ -118,7 +118,7 @@ export default class Logs extends React.Component {
 	}
 
 	render() {
-		const data = this.props.data.logs;
+		const data = this.props.data._.logs;
 		const state = this.props.state.logs;
 
 		return (
@@ -139,7 +139,7 @@ export default class Logs extends React.Component {
 					</div>
 				</div>
 				<Space height='1'/>
-				<Label>Logs (Past 6 Hours)</Label>
+				<Label>Logs (Past 6 Hours/500 Entries)</Label>
 				<Space height='1'/>
 				<div className={ styles.entries }>
 					{ this.renderContent() }

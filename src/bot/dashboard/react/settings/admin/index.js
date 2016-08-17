@@ -5,6 +5,8 @@ import ScrollPane from 'ui/scrollpane';
 import ListSelect from 'ui/listselect';
 
 import LogsView from './views/logs';
+import KicksView from './views/kicks';
+import BansView from './views/bans';
 
 import styles from './css/index.css';
 
@@ -18,6 +20,14 @@ export default class AdminSettings extends React.Component {
 			{
 				name: 'Logs',
 				view: LogsView
+			},
+			{
+				name: 'Kicks',
+				view: KicksView
+			},
+			{
+				name: 'Bans',
+				view: BansView
 			}
 		];
 
@@ -39,7 +49,7 @@ export default class AdminSettings extends React.Component {
 	 * Render the content.
 	 */
 	renderContent() {
-		const data = this.props.data.admin._;
+		const data = this.props.data.admin;
 		const state = this.props.state;
 
 		const option = this.options[state.selected];

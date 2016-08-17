@@ -22,7 +22,7 @@ class Skip extends Command {
 		} else {
 			// Check if the number is valid and positive.
 			let number;
-			if (isNaN(suffix) || (number = parseInt(suffix)) < 0) {
+			if (isNaN(suffix) || (number = parseInt(suffix)) < 1) {
 				this.client.reply(msg, 'Are you serious? Go back to school and learn math again, please.');
 				return;
 			}
