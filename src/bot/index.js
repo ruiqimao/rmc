@@ -300,6 +300,9 @@ class Bot extends EventEmitter {
 			// Ignore messages from herself.
 			if (msg.author.equals(this.client.user)) return;
 
+			// Ignore messages from bots.
+			if (msg.author.bot) return;
+
 			// Ping.
 			if (msg.content === 'ping') {
 				return this.client.sendMessage(msg, 'pong');
