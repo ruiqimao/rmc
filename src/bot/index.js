@@ -34,6 +34,7 @@ class Bot extends EventEmitter {
 		this.numWorkers = numWorkers;
 		this.client = new Client({
 			forceFetchUsers: true,
+			autoReconnect: true,
 			shardCount: numWorkers,
 			shardId: worker.id - 1
 		});
