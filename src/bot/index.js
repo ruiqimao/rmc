@@ -43,6 +43,7 @@ class Bot extends EventEmitter {
 		this.commands = {};
 		this.loggedIn = false;
 		this.gracefulShutdown = false;
+		this.loaded = false;
 
 		// Set constants.
 		this.PERMISSION_DENIED_RESPONSES = [
@@ -114,6 +115,8 @@ class Bot extends EventEmitter {
 
 				// Wait for the client to be ready.
 				this.client.on('ready', () => {
+					if (this.loaded) return;
+					this.loaded = true;
 
 					// Set the logged in flag.
 					this.loggedIn = true;
