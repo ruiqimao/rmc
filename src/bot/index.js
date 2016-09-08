@@ -107,7 +107,7 @@ class Bot extends EventEmitter {
 				console.log('Started web server on port ' + (this.config.SERVER_PORT + this.worker.id) + '!');
 
 				// Login.
-				this.client.loginWithToken(this.token);
+				this.client.loginWithToken('Bot ' + this.token);
 
 				this.client.on('error', (err) => {
 					console.log(err);
