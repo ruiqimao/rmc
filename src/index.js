@@ -32,7 +32,8 @@ function main() {
 	}
 
 	// Start a cluster.
-	const numCPUs = OS.cpus().length;
+	//const numCPUs = OS.cpus().length;
+	const numCPUs = 1; // 1 CPU.
 	if (Cluster.isMaster) {
 		// Fork workers.
 		for (let i = 0; i < numCPUs; i ++) {
